@@ -58,7 +58,7 @@
         props: { page: location.pathname },
       });
     },
-    true,
+    true
   );
   document.addEventListener(
     'click',
@@ -71,7 +71,7 @@
           props: { page: location.pathname },
         });
     },
-    true,
+    true
   );
   window.addEventListener('error', function (e) {
     send('client.error', {
