@@ -1225,6 +1225,7 @@ import '../styles/global.css';
         document.addEventListener('click', (event) => {
             if (event.target instanceof Element && event.target.closest('a[href="/game/"]')) {
                 window.appHealth?.track('play_now_clicked');
+                void window.appHealth?.flush?.();
             }
         });
     </script>
