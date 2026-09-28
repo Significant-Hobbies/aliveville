@@ -35,6 +35,21 @@ const { title } = Astro.props;
 			data-name="AliveVille"
 			defer
 		></script>
+		<script
+			is:inline
+			src="https://health.sassmaker.com/tracker.js"
+			data-key="ahk_pub_2f74e5ff486ddc1ba23438681941af223efa6869133e5a37ae12ca7135815b0f"
+			data-project="app-import-f8ca05726a079123c25fd18a2e7c296ecf1711819ca66e269d0ca7c9131deb8c"
+			data-identity="session"
+			defer
+		></script>
+		<script is:inline>
+			document.addEventListener('click', (event) => {
+				if (event.target instanceof Element && event.target.closest('a[href="/game/"]')) {
+					window.appHealth?.track('play_now_clicked');
+				}
+			});
+		</script>
 
 	</body>
 </html>
