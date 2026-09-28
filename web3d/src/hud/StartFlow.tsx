@@ -629,6 +629,7 @@ function CharacterDetail({
       <button
         type="button"
         className="char-pick"
+        data-app-health-event="game.begin.clicked"
         disabled={busy !== null}
         onClick={() => onPick(npc?.id ?? null, npc ? undefined : heroName, chosenAppearance)}
       >
