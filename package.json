@@ -70,6 +70,7 @@
     "@react-three/fiber": "^9.4.0",
     "@react-three/postprocessing": "^3.0.4",
     "@react-three/rapier": "^2.2.0",
+    "@saas-maker/app-health": "https://github.com/sass-maker/app-health/releases/download/node-v0.4.0/saas-maker-app-health-0.4.0.tgz",
     "ai": "6.0.168",
     "kokoro-js": "^1.2.1",
     "posthog-js": "^1.396.5",
