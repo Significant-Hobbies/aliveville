@@ -26,6 +26,9 @@ importers:
       '@react-three/rapier':
         specifier: ^2.2.0
         version: 2.2.0(@react-three/fiber@9.6.1(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(three@0.184.0))(react@19.2.6)(three@0.184.0)
+      '@saas-maker/app-health':
+        specifier: https://github.com/sass-maker/app-health/releases/download/node-v0.4.0/saas-maker-app-health-0.4.0.tgz
+        version: https://github.com/sass-maker/app-health/releases/download/node-v0.4.0/saas-maker-app-health-0.4.0.tgz
       ai:
         specifier: 6.0.168
         version: 6.0.168(zod@4.4.3)
@@ -1298,6 +1301,18 @@ packages:
 
   '@rolldown/pluginutils@1.0.0-rc.7':
     resolution: {integrity: sha512-qujRfC8sFVInYSPPMLQByRh7zhwkGFS4+tyMQ83srV1qrxL4g8E2tyxVVyxd0+8QeBM1mIk9KbWxkegRr76XzA==}
+
+  '@saas-maker/app-health@https://github.com/sass-maker/app-health/releases/download/node-v0.4.0/saas-maker-app-health-0.4.0.tgz':
+    resolution: {tarball: https://github.com/sass-maker/app-health/releases/download/node-v0.4.0/saas-maker-app-health-0.4.0.tgz}
+    version: 0.4.0
+    peerDependencies:
+      express: '>=4.19.0 <6'
+      hono: '>=4.10.0 <5'
+    peerDependenciesMeta:
+      express:
+        optional: true
+      hono:
+        optional: true
 
   '@sindresorhus/is@7.2.0':
     resolution: {integrity: sha512-P1Cz1dWaFfR4IR+U13mqqiGsLFf1KbayybWwdd2vfctdV6hDpUkgCY0nKOLLTMSoRd/jJNjtbqzf13K8DCCXQw==}
@@ -3261,6 +3276,8 @@ snapshots:
   '@rolldown/pluginutils@1.0.0-rc.18': {}
 
   '@rolldown/pluginutils@1.0.0-rc.7': {}
+
+  '@saas-maker/app-health@https://github.com/sass-maker/app-health/releases/download/node-v0.4.0/saas-maker-app-health-0.4.0.tgz': {}
 
   '@sindresorhus/is@7.2.0': {}
 
