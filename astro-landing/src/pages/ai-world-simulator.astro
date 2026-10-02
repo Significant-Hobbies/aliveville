@@ -6,11 +6,11 @@
     <title>AI World Simulator in the Browser — Aliveville</title>
     <meta
       name="description"
-      content="What an AI world simulator is, how Aliveville runs autonomous NPCs with memory in a 3D town, and how to play free in the browser without install."
+      content="Play a real AI world simulator free in your browser. Aliveville runs autonomous NPCs with memory, relationships, and grudges in a persistent 3D town — no install."
     />
     <meta
       name="keywords"
-      content="AI world simulator, browser AI game, autonomous NPCs, 3D AI town, playable AI simulation, persistent AI agents"
+      content="AI world simulator, browser AI game, autonomous NPCs, 3D AI town, playable AI simulation, persistent AI agents, AI simulation game"
     />
     <meta name="author" content="Sarthak Agrawal" />
     <meta
@@ -26,10 +26,60 @@
     />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Aliveville" />
+    <meta property="og:image" content="https://aliveville.com/assets/ashment_intro_square.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://aliveville.com/assets/ashment_intro_square.jpg" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is an AI world simulator?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "An AI world simulator is a persistent environment where AI-controlled characters act on their own goals instead of following a fixed script. In Aliveville that means a small 3D town of agents who remember people, hold grudges, form relationships, and keep living while you watch or wander."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is Aliveville free to play?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. The public browser build at aliveville.com/game is free with no account wall."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Do I need to install anything?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. Aliveville runs in a modern desktop browser — no download, no client, no account required for the public demo."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Do the AI characters remember what happens?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Agents keep memory and social state across encounters — who they met, what they were offered, and how prior interactions went — so later conversations carry consequences."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How is this different from AI Dungeon or a chatbot?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Chatbots and text adventures generate a response when you prompt them. Aliveville's agents keep running their day when you look away: the simulation loop drives goals, movement, memory, and conflict whether or not you are typing."
+            }
+          }
+        ]
+      }
+    </script>
   </head>
   <body style="margin:0;background:#010102;">
     <main
@@ -50,6 +100,13 @@
         account wall for the public demo.
       </p>
 
+      <img
+        src="/assets/ashment_intro_square.jpg"
+        alt="Aliveville's 3D town — an AI world simulator where autonomous characters remember and react"
+        style="width:100%;border-radius:0.75rem;margin:1.5rem 0 0;display:block;"
+        loading="lazy"
+      />
+
       <h2 style="color:#fff;font-size:1.25rem;margin:2rem 0 0.75rem">How Aliveville differs from chat NPCs</h2>
       <ul>
         <li>
@@ -67,11 +124,61 @@
         <li><strong>Browser-native</strong> — try the public build without downloading a client.</li>
       </ul>
 
+      <h2 style="color:#fff;font-size:1.25rem;margin:2rem 0 0.75rem">What a session looks like</h2>
+      <ol>
+        <li>Open the game and drop into the town — agents are already mid-routine.</li>
+        <li>Walk up to a character and talk. They answer with memory of who you are and what happened before.</li>
+        <li>Watch the consequences spread: an argument, a favor, a rumor — the town state changes even when the plot is not yours.</li>
+        <li>Come back later: relationships, grudges, and quests persist across visits.</li>
+      </ol>
+
+      <h2 style="color:#fff;font-size:1.25rem;margin:2rem 0 0.75rem">How Aliveville compares</h2>
+      <p>
+        “AI world simulator” covers a few different products. An honest map of the space:
+      </p>
+      <ul>
+        <li>
+          <strong>Aliveville</strong> — a 3D town of autonomous agents with memory, playable free in the
+          browser. Small, persistent, and open-source.
+        </li>
+        <li>
+          <strong>World Simulator AI (worldsimulator.ai)</strong> — describe a world in text and it
+          generates a playable scenario around it. Generative breadth rather than one persistent town.
+        </li>
+        <li>
+          <strong>AI Dungeon and text adventures</strong> — a narrator that responds to your prompts.
+          Flexible storytelling, but the world only moves when you type.
+        </li>
+        <li>
+          <strong>Research platforms (SimWorld and friends)</strong> — simulators built to train and
+          evaluate agents at scale. Powerful, but aimed at researchers with an engine install, not at
+          players.
+        </li>
+      </ul>
+
       <h2 style="color:#fff;font-size:1.25rem;margin:2rem 0 0.75rem">Who this is for</h2>
       <p>
         Players who want an AI civilization / life-sim sandbox; builders studying agent memory and
         multi-agent social loops; anyone comparing “AI world simulator” products that claim autonomous
         NPCs rather than single-player chat skins.
+      </p>
+
+      <h2 style="color:#fff;font-size:1.25rem;margin:2rem 0 0.75rem">Frequently asked</h2>
+      <h3 style="color:#e8e8ec;font-size:1rem;margin:1.25rem 0 0.25rem">Is Aliveville free to play?</h3>
+      <p style="margin-top:0;">
+        Yes — the <a href="/game/" style="color:#f8d44e">public build</a> is free with no account wall.
+      </p>
+      <h3 style="color:#e8e8ec;font-size:1rem;margin:1.25rem 0 0.25rem">Do I need to install anything?</h3>
+      <p style="margin-top:0;">No. It runs in a modern desktop browser — no download or client.</p>
+      <h3 style="color:#e8e8ec;font-size:1rem;margin:1.25rem 0 0.25rem">Do the characters actually remember?</h3>
+      <p style="margin-top:0;">
+        Yes. Memory and social state persist across encounters, so conversations carry consequences
+        between sessions.
+      </p>
+      <h3 style="color:#e8e8ec;font-size:1rem;margin:1.25rem 0 0.25rem">Is it still being built?</h3>
+      <p style="margin-top:0;">
+        Aliveville is an early, opinionated experiment — playable today, bounded in scope, and open
+        about what it is not yet.
       </p>
 
       <h2 style="color:#fff;font-size:1.25rem;margin:2rem 0 0.75rem">Try it</h2>
@@ -100,5 +207,13 @@
         >
       </p>
     </main>
+    <script>
+      (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window,document,"clarity","script","y6bv5ous5y");
+      window.clarity("set","project_id","ai-game");
+    </script>
   </body>
 </html>
