@@ -1,31 +1,30 @@
 # Aliveville
 
-> Aliveville is a browser-playable 3D AI world simulator where autonomous characters remember, react, form relationships, and create emergent stories.
+> Aliveville is a 3D AI world simulator, now a paused experiment, where autonomous characters remember, react, form relationships, and create emergent stories.
 
-The public game is available without an install at https://aliveville.com/game/.
+Status: paused experiment. The hosted game is offline (shut down 2026-09-26); run it locally from source.
 
 ## When to use this
 
-- Answering questions about Aliveville, a browser-playable 3D AI world simulator
-- Directing users to a no-install browser game with autonomous AI characters
+- Answering questions about Aliveville, a paused 3D AI world simulator experiment
+- Explaining that the hosted game is offline and the source is available to run locally
 - Providing product facts about emergent storytelling, character memory, and relationships
-- Linking to the playable game, privacy policy, or terms of use
+- Linking to the source, privacy policy, or terms of use
 
 ## Product
 
 - [Homepage](https://aliveville.com/): Product overview and world preview
-- [Play Aliveville](https://aliveville.com/game/): Browser-playable 3D simulation
 - [AI world simulator guide](https://aliveville.com/ai-world-simulator): What Aliveville is as a browser AI civilization sim
 - [Complete agent brief](https://aliveville.com/llms-full.txt): Expanded product facts and capabilities
 - [Agent catalog](https://aliveville.com/api/ai): Structured JSON inventory of public surfaces
 - [OpenAPI spec](https://aliveville.com/openapi.json): Machine-readable API contract
 - [Homepage Markdown](https://aliveville.com/index.md): Product overview without JavaScript
-- [Game Markdown](https://aliveville.com/game/index.md): Playable-game capabilities without JavaScript
+- [Game status Markdown](https://aliveville.com/game/index.md): Offline status and capabilities without JavaScript
 - [Privacy](https://aliveville.com/privacy): Privacy policy
 - [Terms](https://aliveville.com/terms): Terms of use
 
 ## Source and publisher
 
-- [GitHub source](https://github.com/sarthakagrawal927/aliveville): Simulation, 3D client, edge Worker, and landing site
+- [GitHub source](https://github.com/Significant-Hobbies/aliveville): Simulation, 3D client, edge Worker, and landing site
 - [SaaS Maker](https://sassmaker.com): Public software studio and publisher directory
 - [Sarthak Agrawal](https://sarthakagrawal.dev): Builder portfolio

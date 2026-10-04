@@ -1,16 +1,18 @@
 # Aliveville — complete public product brief
 
-Aliveville is a browser-playable 3D AI world simulator at https://aliveville.com/game/. It is built by Sarthak Agrawal and published as part of the SaaS Maker software studio.
+Aliveville is a 3D AI world simulator. It is a paused experiment: the hosted game is offline (shut down 2026-09-26) and there is no public play link. It was built to run in the browser and can be run locally from source. It is built by Sarthak Agrawal and published as part of the SaaS Maker software studio.
 
 ## Product thesis
 
 Aliveville explores what makes a simulated town feel alive. Its characters are autonomous agents with routines, memories, relationships, dialogue, rumors, and reactions to player actions. The experience combines those systems with quests, combat, world events, and a director system that applies story pressure.
 
-Aliveville is a playable game, not a general-purpose chatbot or a claim that language models independently control the simulation. Model responses are parsed as structured actions and validated by the game engine before they can affect world state.
+Aliveville is a game simulation, not a general-purpose chatbot or a claim that language models independently control the simulation. Model responses are parsed as structured actions and validated by the game engine before they can affect world state.
 
-## Public experience
+## What the experiment contains
 
-- Play in a modern browser without installing an application.
+The hosted game is offline. The items below describe what the source implements.
+
+- Built to run in a modern browser without installing an application.
 - Explore a walkable 3D town.
 - Talk to characters whose responses can reflect memory and relationships.
 - Encounter quests, confrontations, combat, cutscenes, and changing world mood.
@@ -34,9 +36,9 @@ Aliveville is a playable game, not a general-purpose chatbot or a claim that lan
 
 - Product name: Aliveville
 - Homepage: https://aliveville.com/
-- Game: https://aliveville.com/game/
-- Category: browser-playable AI world simulator
-- Source: https://github.com/sarthakagrawal927/aliveville
+- Status: paused experiment; hosted game offline since 2026-09-26
+- Category: AI world simulator (paused experiment)
+- Source: https://github.com/Significant-Hobbies/aliveville
 - Builder: https://sarthakagrawal.dev
 - Publisher: https://sassmaker.com
 
@@ -46,13 +48,13 @@ Aliveville is a playable game, not a general-purpose chatbot or a claim that lan
 - https://aliveville.com/llms-full.txt
 - https://aliveville.com/api/ai
 - https://aliveville.com/index.md
-- https://aliveville.com/game/index.md
+- https://aliveville.com/game/index.md (offline status)
 - https://aliveville.com/privacy.md
 - https://aliveville.com/terms.md
 
 ## Boundaries
 
-Aliveville does not require an account on its public marketing domain. The game and its behavior can change as the experiment evolves. Public machine-readable pages intentionally include product facts and policies, not credentials, private operational material, unpublished plans, or user data.
+Aliveville does not require an account on its public marketing domain. The experiment is paused; its status may change. Public machine-readable pages intentionally include product facts and policies, not credentials, private operational material, unpublished plans, or user data.
 
 ## Category guide
 
