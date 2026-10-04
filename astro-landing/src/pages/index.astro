@@ -460,10 +460,10 @@ import '../styles/global.css';
         },
         {
           "@type": "Question",
-          "name": "Can I play Aliveville without downloading anything?",
+          "name": "Can I play Aliveville right now?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes, Aliveville is browser-playable with no install. It runs directly in modern browsers with real-time lighting and 3D atmosphere. Open the page, pick a hero, and walk the town using WASD controls — there is nothing to download or set up first."
+            "text": "Not right now. Aliveville is a paused experiment and the hosted game server was shut down on 2026-09-26. It was built to run in the browser with no install; the source is public on GitHub if you want to run it yourself."
           }
         },
         {
@@ -496,7 +496,7 @@ import '../styles/global.css';
       "@context": "https://schema.org",
       "@type": "VideoGame",
       "name": "Aliveville",
-      "url": "https://aliveville.com/game",
+      "url": "https://aliveville.com/",
       "description": "A browser-playable AI world simulator where 5 autonomous agents live their own day in a 3D town — remembering people, holding grudges, and gossiping.",
       "genre": ["Simulation", "AI", "Sandbox"],
       "gamePlatform": "Web Browser",
@@ -506,7 +506,7 @@ import '../styles/global.css';
         "@type": "Offer",
         "price": "0",
         "priceCurrency": "USD",
-        "description": "Free to play in browser, no install required."
+        "description": "Free and open source. The hosted game is offline (paused experiment)."
       },
       "publisher": {
         "@type": "Organization",
@@ -550,16 +550,16 @@ import '../styles/global.css';
 
         <div class="relative z-10 max-w-6xl mx-auto text-center space-y-12">
             <div class="flex justify-center">
-                <span class="tag border-white/20 text-white/60">Browser-playable AI world, no install</span>
+                <span class="tag border-white/20 text-white/60">Paused experiment — not currently playable</span>
             </div>
             <h1 class="hero-title animate-reveal">
                 <span class="gradient-text scramble-text" data-value="Aliveville">Aliveville</span>
             </h1>
             <p class="max-w-3xl mx-auto text-xl text-white/40 font-light leading-relaxed animate-reveal" style="animation-delay: 0.2s">
-                Walk a 3D town where 5 AI agents live their own day. They remember people, hold grudges, and gossip while you explore.
+                A paused experiment: a 3D town where 5 AI agents live their own day, remember people, hold grudges, and gossip. The live game server is offline.
             </p>
             <div class="flex flex-col sm:flex-row justify-center items-center gap-8 pt-8 animate-reveal" style="animation-delay: 0.4s">
-                <a href="/game/" class="play-cta magnetic-target">▶ Play Now</a>
+                <a href="https://github.com/Significant-Hobbies/aliveville" class="play-cta magnetic-target">Paused experiment — source on GitHub</a>
                 <button class="font-mono text-[0.6rem] uppercase tracking-[0.3em] text-white/30 hover:text-white transition-all border-b border-white/0 hover:border-white/20 pb-1 magnetic-target" onclick="document.getElementById('features').scrollIntoView({behavior: 'smooth'})">
                     SEE HOW IT WORKS
                 </button>
@@ -607,9 +607,9 @@ import '../styles/global.css';
         <div class="nav-links">
             <a href="#about" class="glitch-hover">World</a>
             <a href="#features" class="glitch-hover">Protocols</a>
-            <a href="#play" class="glitch-hover">Play</a>
+            <a href="#play" class="glitch-hover">Status</a>
         </div>
-        <a href="/game/" class="btn-pro magnetic-target">PLAY IN BROWSER</a>
+        <a href="https://github.com/Significant-Hobbies/aliveville" class="btn-pro magnetic-target">SOURCE ON GITHUB</a>
     </nav>
 
     <ThreeBackground />
@@ -707,11 +707,11 @@ import '../styles/global.css';
                     Step into Ashment
                 </h2>
                 <p class="text-white/50 text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed">
-                    A 3D town full of villagers who run their own lives. They remember you, hold grudges, and talk about you behind your back. Pick a hero and walk in.
+                    A 3D town full of villagers who run their own lives. They remember you, hold grudges, and talk about you behind your back. This is a paused experiment: the hosted game is offline, and the source is public.
                 </p>
                 <div class="flex flex-col items-center gap-5 pt-4">
-                    <a href="/game/" class="play-cta magnetic-target">▶ Play Now</a>
-                    <span class="font-mono text-[0.6rem] uppercase tracking-[0.3em] text-white/30">WASD to move · click to talk</span>
+                    <a href="https://github.com/Significant-Hobbies/aliveville" class="play-cta magnetic-target">Paused experiment — source on GitHub</a>
+                    <span class="font-mono text-[0.6rem] uppercase tracking-[0.3em] text-white/30">Hosted game offline · run it locally from source</span>
                 </div>
             </div>
 
@@ -798,11 +798,11 @@ import '../styles/global.css';
 
                 <details class="glass-card p-6 group">
                     <summary class="cursor-pointer list-none flex items-center justify-between gap-4 text-white font-bold text-lg">
-                        <span>Can I play Aliveville without downloading anything?</span>
+                        <span>Can I play Aliveville right now?</span>
                         <span class="text-[#f8d44e] font-mono text-xl transition-transform group-open:rotate-45">+</span>
                     </summary>
                     <p class="mt-4 text-white/45 text-sm leading-relaxed font-light">
-                        Yes, Aliveville is browser-playable with no install. It runs directly in modern browsers with real-time lighting and 3D atmosphere. Open the page, pick a hero, and walk the town using WASD controls — there is nothing to download or set up first.
+                        Not right now. Aliveville is a paused experiment and the hosted game server was shut down on 2026-09-26. It was built to run in the browser with no install; the source is public on GitHub if you want to run it yourself.
                     </p>
                 </details>
 
@@ -845,7 +845,7 @@ import '../styles/global.css';
             <div class="col-span-2 space-y-10">
                 <div class="logo">ALIVEVILLE</div>
                 <p class="text-white/20 text-sm max-w-sm leading-relaxed font-light">
-                    A browser-playable AI world where the village keeps living after you close the tab. Built by Sarthak Agrawal.
+                    A paused AI world-simulator experiment. The hosted game is offline; the source is public. Built by Sarthak Agrawal.
                 </p>
             </div>
             <div class="space-y-8">

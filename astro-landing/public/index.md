@@ -2,11 +2,11 @@
 
 Aliveville is a browser-playable 3D AI world simulator. Players explore a small town where autonomous characters remember people, react to events, build relationships, spread rumors, and participate in emergent stories.
 
-## Play
+## Status
 
-- Game: https://aliveville.com/game/
-- No install is required.
-- The public experience does not require an account.
+- Status: paused experiment; the hosted game is offline (shut down 2026-09-26).
+- Source: https://github.com/Significant-Hobbies/aliveville
+- It was built to run in the browser; run it locally from source.
 - Each visitor receives an isolated game session.
 
 ## What makes the world alive

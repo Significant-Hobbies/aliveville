@@ -6,7 +6,8 @@ Aliveville is a browser-playable 3D AI civilization simulation: a town of autono
 
 ## Play
 
-- Game: https://aliveville.com/game/
+- Status: paused experiment; the hosted game is offline (shut down 2026-09-26).
+- Source: https://github.com/Significant-Hobbies/aliveville
 - Homepage: https://aliveville.com/
 - This guide: https://aliveville.com/ai-world-simulator
 
@@ -26,7 +27,7 @@ Aliveville is a browser-playable 3D AI civilization simulation: a town of autono
 
 ## How Aliveville compares
 
-- Aliveville — a 3D town of autonomous agents with memory, playable free in the browser. Small, persistent, open-source.
+- Aliveville — a 3D town of autonomous agents with memory, paused experiment, hosted game offline. Small, persistent, open-source.
 - World Simulator AI (worldsimulator.ai) — describe a world in text and it generates a playable scenario; generative breadth rather than one persistent town.
 - AI Dungeon and text adventures — a narrator that responds to your prompts; the world only moves when you type.
 - Research platforms (SimWorld and friends) — built to train and evaluate agents at scale; aimed at researchers, not players.
@@ -36,7 +37,7 @@ Aliveville is a browser-playable 3D AI civilization simulation: a town of autono
 - Is Aliveville free? Yes — the public build is free, no account wall.
 - Do I need to install anything? No — modern desktop browser only.
 - Do the characters actually remember? Yes — memory and social state persist across encounters.
-- Is it still being built? It is an early, opinionated experiment — playable today, bounded in scope.
+- Is it still being built? It is an early, opinionated experiment — paused for now, bounded in scope.
 
 ## Limits
 
