@@ -1,5 +1,6 @@
 ---
 import ThreeBackground from '../components/ThreeBackground.astro';
+import PreciseFooter from '../components/PreciseFooter.astro';
 import '../styles/global.css';
 ---
 <!doctype html>
@@ -839,50 +840,7 @@ import '../styles/global.css';
         </div>
     </section>
 
-    <!-- FOOTER -->
-    <footer class="relative py-28 border-t border-white/5 bg-[#010102] transition-opacity duration-500">
-        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-24">
-            <div class="col-span-2 space-y-10">
-                <div class="logo">ALIVEVILLE</div>
-                <p class="text-white/20 text-sm max-w-sm leading-relaxed font-light">
-                    A paused AI world-simulator experiment. The hosted game is offline; the source is public. Built by Sarthak Agrawal.
-                </p>
-            </div>
-            <div class="space-y-8">
-                <h4 class="text-[0.7rem] uppercase tracking-[0.4em] text-white/60 font-black">Legal</h4>
-                <ul class="space-y-4 text-sm text-white/20 font-mono">
-                    <li><a href="/ai-world-simulator" class="hover:text-white transition-colors">AI world simulator</a></li>
-                    <li><a href="/privacy" class="hover:text-white transition-colors">Privacy</a></li>
-                    <li><a href="/terms" class="hover:text-white transition-colors">Terms</a></li>
-                </ul>
-            </div>
-            <div class="space-y-8">
-                <h4 class="text-[0.7rem] uppercase tracking-[0.4em] text-white/60 font-black">Resources</h4>
-                <ul class="space-y-4 text-sm text-white/20 font-mono">
-                    <li><a href="https://github.com/sarthakagrawal927/aliveville" class="inline-flex items-center hover:text-white transition-colors" rel="noopener noreferrer" target="_blank" aria-label="GitHub repository" title="GitHub repository"><svg viewBox="0 0 16 16" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a></li>
-                    <li><a href="https://sarthakagrawal.dev" class="hover:text-white transition-colors" rel="noopener noreferrer" target="_blank">Sarthak</a></li>
-                    <li><a href="https://sassmaker.com" class="hover:text-white transition-colors" rel="noopener noreferrer" target="_blank">Foundry</a></li>
-                </ul>
-            </div>
-        </div>
-        <!-- FLEET CROSS-LINKS -->
-        <div class="max-w-7xl mx-auto px-6 mt-20 pt-12 border-t border-white/5">
-            <h4 class="text-[0.7rem] uppercase tracking-[0.4em] text-white/60 font-black mb-8">Built with Foundry</h4>
-            <ul class="flex flex-wrap gap-x-8 gap-y-3 text-xs text-white/20 font-mono">
-                <li><a href="https://sassmaker.com" class="hover:text-white/60 transition-colors" rel="noopener noreferrer" target="_blank">Foundry</a> <span class="text-white/10">— SaaS factory floor</span></li>
-                <li><a href="https://codevetter.com" class="hover:text-white/60 transition-colors" rel="noopener noreferrer" target="_blank">CodeVetter</a> <span class="text-white/10">— AI code review</span></li>
-                <li><a href="https://highsignal.app" class="hover:text-white/60 transition-colors" rel="noopener noreferrer" target="_blank">High Signal</a> <span class="text-white/10">— Daily tech/startup brief</span></li>
-                <li><a href="https://karte.cc" class="hover:text-white/60 transition-colors" rel="noopener noreferrer" target="_blank">Karte</a> <span class="text-white/10">— AI link-in-bio</span></li>
-                <li><a href="https://rolepatch.com" class="hover:text-white/60 transition-colors" rel="noopener noreferrer" target="_blank">RolePatch</a> <span class="text-white/10">— AI resume tailoring</span></li>
-                <li><a href="https://significanthobbies.com" class="hover:text-white/60 transition-colors" rel="noopener noreferrer" target="_blank">Significant Hobbies</a> <span class="text-white/10">— Hobby journey mapper</span></li>
-                <li><a href="https://materia.io" class="hover:text-white/60 transition-colors" rel="noopener noreferrer" target="_blank">Materia</a> <span class="text-white/10">— Evidence-graded remedies</span></li>
-            </ul>
-        </div>
-        <div class="max-w-7xl mx-auto px-6 mt-24 pt-12 border-t border-white/5 flex justify-between items-center text-[0.6rem] text-white/10 uppercase tracking-[0.6em] font-mono">
-            <span>© 2026 Aliveville</span>
-            <span>The village never sleeps.</span>
-        </div>
-    </footer>
+    <PreciseFooter />
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -1226,8 +1184,6 @@ import '../styles/global.css';
         })(window,document,"clarity","script","y6bv5ous5y");
         window.clarity("set","project_id","ai-game");
     </script>
-    <script is:inline src="https://sassmaker.com/project-strip.js" data-project="ai-game" defer></script>
-    <script is:inline src="https://sassmaker.com/ai-chat-footer.js" data-name="AliveVille" defer></script>
     <script is:inline src="https://health.sassmaker.com/tracker.js" data-key="ahk_pub_2f74e5ff486ddc1ba23438681941af223efa6869133e5a37ae12ca7135815b0f" data-project="app-import-f8ca05726a079123c25fd18a2e7c296ecf1711819ca66e269d0ca7c9131deb8c" data-identity="session" defer></script>
     <script is:inline>
         document.addEventListener('click', (event) => {
