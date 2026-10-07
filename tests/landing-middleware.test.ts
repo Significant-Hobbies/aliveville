@@ -235,6 +235,24 @@ describe('AliveVille landing Pages middleware', () => {
     expect(await response.text()).toBe('');
   });
 
+  it('leaves direct Markdown asset cache headers intact', async () => {
+    const { context } = makeContext({
+      path: '/privacy.md',
+      asset: () =>
+        new Response('# Privacy', {
+          headers: {
+            'content-type': 'text/markdown; charset=utf-8',
+            'cache-control': 'public, max-age=300',
+          },
+        }),
+    });
+    const response = await onRequest(context);
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get('cache-control')).toBe('public, max-age=300');
+    expect(await response.text()).toBe('# Privacy');
+  });
+
   it.each([429, 500, 503])('preserves upstream alternate errors with status %i', async (status) => {
     const { context } = makeContext({
       path: '/privacy',
@@ -322,12 +340,17 @@ describe('AliveVille landing Pages middleware', () => {
         }),
       next: () =>
         new Response('<html>HTML page</html>', {
-          headers: { 'content-type': 'text/html; charset=utf-8', vary: 'Accept-Encoding' },
+          headers: {
+            'content-type': 'text/html; charset=utf-8',
+            'cache-control': 'public, max-age=300',
+            vary: 'Accept-Encoding',
+          },
         }),
     });
     const htmlResponse = await onRequest(html.context);
     expect(htmlResponse.status).toBe(200);
     expect(htmlResponse.headers.get('vary')).toBe('Accept-Encoding, Accept');
+    expect(htmlResponse.headers.get('cache-control')).toBe('no-store');
     expect(await htmlResponse.text()).toContain('HTML page');
     expect(html.assetFetch).toHaveBeenCalledOnce();
 
@@ -338,6 +361,7 @@ describe('AliveVille landing Pages middleware', () => {
         new Response('# Markdown', {
           headers: {
             'content-type': 'text/markdown; charset=utf-8',
+            'cache-control': 'public, max-age=300',
             vary: 'accept, ACCEPT-Encoding',
           },
         }),
@@ -345,6 +369,7 @@ describe('AliveVille landing Pages middleware', () => {
     const markdownResponse = await onRequest(markdown.context);
     expect(markdownResponse.status).toBe(200);
     expect(markdownResponse.headers.get('vary')).toBe('accept, ACCEPT-Encoding');
+    expect(markdownResponse.headers.get('cache-control')).toBe('no-store');
     expect(await markdownResponse.text()).toContain('# Markdown');
   });
 
