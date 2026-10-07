@@ -2,11 +2,12 @@ import { type ChildProcess, spawn } from 'node:child_process';
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { describe, expect, test } from 'vitest';
 
-const SERVER = new URL('../src/server.ts', import.meta.url).pathname;
-const TSX = new URL('../node_modules/tsx/dist/cli.mjs', import.meta.url).pathname;
+const SERVER = fileURLToPath(new URL('../src/server.ts', import.meta.url));
+const TSX = fileURLToPath(new URL('../node_modules/tsx/dist/cli.mjs', import.meta.url));
 
 function startServer(port: number, env: Record<string, string> = {}): Promise<ChildProcess> {
   const child = spawn(process.execPath, [TSX, SERVER], {

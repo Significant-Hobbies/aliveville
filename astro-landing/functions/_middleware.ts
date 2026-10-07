@@ -320,8 +320,9 @@ async function fetchMarkdownAsset(env: Env, url: URL, request: Request): Promise
 async function passThroughAssetError(response: Response, request: Request): Promise<Response> {
   const headers = withRateLimit(new Headers(response.headers));
   addVary(headers, 'Accept', 'Accept-Encoding');
-  if (request.method === 'HEAD') await response.body?.cancel();
-  return new Response(request.method === 'HEAD' ? null : response.body, {
+  const bodyless = request.method === 'HEAD' || response.status === 204 || response.status === 304;
+  if (bodyless) await response.body?.cancel();
+  return new Response(bodyless ? null : response.body, {
     status: response.status,
     statusText: response.statusText,
     headers,
@@ -402,11 +403,14 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   // Keep the documented sitemap URL as an alias for Astro's generated index.
   if (pathname === '/sitemap.xml' && (request.method === 'GET' || request.method === 'HEAD')) {
     const indexUrl = new URL('/sitemap-index.xml', url);
+    const indexHeaders = new Headers();
+    for (const name of ['accept', 'accept-encoding', 'if-none-match', 'if-modified-since']) {
+      const value = request.headers.get(name);
+      if (value) indexHeaders.set(name, value);
+    }
     const indexRequest = new Request(indexUrl.toString(), {
       method: 'GET',
-      headers: request.headers.has('accept')
-        ? { accept: request.headers.get('accept')! }
-        : undefined,
+      headers: indexHeaders,
     });
     const indexResponse = await env.ASSETS.fetch(indexRequest);
     const contentType = indexResponse.headers.get('content-type');
@@ -420,14 +424,8 @@ export const onRequest: PagesFunction<Env> = async (context) => {
       });
     }
 
-    if (indexResponse.status >= 400 && indexResponse.status !== 404) {
-      const headers = withRateLimit(new Headers(indexResponse.headers));
-      if (request.method === 'HEAD') await indexResponse.body?.cancel();
-      return new Response(request.method === 'HEAD' ? null : indexResponse.body, {
-        status: indexResponse.status,
-        statusText: indexResponse.statusText,
-        headers,
-      });
+    if (indexResponse.status !== 200 && indexResponse.status !== 404) {
+      return passThroughAssetError(indexResponse, request);
     }
 
     await indexResponse.body?.cancel();

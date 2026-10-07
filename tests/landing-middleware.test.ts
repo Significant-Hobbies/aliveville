@@ -21,6 +21,7 @@ type Context = Parameters<typeof onRequest>[0];
 function makeContext(options: {
   path: string;
   accept?: string;
+  headers?: HeadersInit;
   method?: 'GET' | 'HEAD';
   asset: (request: Request) => Promise<Response> | Response;
   next?: () => Promise<Response> | Response;
@@ -33,10 +34,12 @@ function makeContext(options: {
           headers: { 'content-type': 'text/html; charset=utf-8' },
         }))
   );
+  const headers = new Headers(options.headers);
+  if (options.accept) headers.set('accept', options.accept);
   const context = {
     request: new Request(`https://aliveville.com${options.path}`, {
       method: options.method ?? 'GET',
-      headers: options.accept ? { accept: options.accept } : undefined,
+      headers,
     }),
     env: { ASSETS: { fetch: assetFetch } },
     next,
@@ -88,6 +91,34 @@ describe('AliveVille landing Pages middleware', () => {
     expect(missing.status).toBe(404);
     expect(missing.headers.get('content-type')).toContain('text/plain');
     expect(invalidXml.bodyUsed).toBe(true);
+  });
+
+  it('preserves conditional and throttled sitemap asset responses', async () => {
+    const { context } = makeContext({
+      path: '/sitemap.xml',
+      headers: { 'if-none-match': '"sitemap-v1"' },
+      asset: (request) => {
+        expect(request.headers.get('if-none-match')).toBe('"sitemap-v1"');
+        return new Response(null, { status: 304, headers: { etag: '"sitemap-v1"' } });
+      },
+    });
+    const notModified = await onRequest(context);
+    expect(notModified.status).toBe(304);
+    expect(notModified.headers.get('etag')).toBe('"sitemap-v1"');
+    expect(await notModified.text()).toBe('');
+
+    const { context: throttledContext } = makeContext({
+      path: '/sitemap.xml',
+      asset: () =>
+        new Response('rate limited', {
+          status: 429,
+          headers: { 'retry-after': '30' },
+        }),
+    });
+    const throttled = await onRequest(throttledContext);
+    expect(throttled.status).toBe(429);
+    expect(throttled.headers.get('retry-after')).toBe('30');
+    expect(await throttled.text()).toBe('rate limited');
   });
 
   it.each([
