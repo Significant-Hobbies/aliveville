@@ -17,21 +17,24 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: "22"
-          cache: npm
-          cache-dependency-path: astro-landing/package-lock.json
+      - name: Prepare pinned landing pnpm
+        working-directory: astro-landing
+        run: |
+          corepack enable
+          corepack install
       - name: Install and build
         working-directory: astro-landing
         run: |
-          npm ci
-          npm run build
+          pnpm install --frozen-lockfile
+          pnpm audit --audit-level=high
+          pnpm run build
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          # the action auto-detects the repo's packageManager (pnpm) which isn't
-          # installed in this npm-based job; pin to npm so wrangler installs cleanly
-          packageManager: npm
+          packageManager: pnpm
+          wranglerVersion: "4.99.0"
           # Run from astro-landing/ so wrangler finds astro-landing/functions/_middleware.ts.
           # Wrangler looks for functions/ relative to the CWD, not the deploy
           # directory — deploying from the repo root with `pages deploy astro-landing/dist`

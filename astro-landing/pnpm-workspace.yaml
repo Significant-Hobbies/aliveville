@@ -1,0 +1,13 @@
+packages:
+  - .
+
+onlyBuiltDependencies:
+  - esbuild
+
+# GHSA-68fv-2mgg-jv7q: Tailwind's compatible range retains 1.2.1 on import.
+overrides:
+  source-map-js: 1.2.2
+  # GHSA-ch52-4w7c-c8xp has no patched release. Astro 7.3.6 declares
+  # this package but its shipped code does not import it. Keep the removal
+  # version-scoped so an Astro upgrade must qualify the graph again.
+  'astro@7.3.6>http-cache-semantics': '-'

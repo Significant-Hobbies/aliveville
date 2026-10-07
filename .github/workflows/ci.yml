@@ -6,6 +6,26 @@ on:
     branches: [main]
 
 jobs:
+  landing:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: astro-landing
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Prepare pinned landing pnpm
+        run: |
+          corepack enable
+          corepack install
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm audit --audit-level=high
+      - run: pnpm run build
+      - name: Preserve independent game lockfile
+        run: git diff --exit-code -- ../pnpm-lock.yaml
+
   check:
     runs-on: ubuntu-latest
     steps:
