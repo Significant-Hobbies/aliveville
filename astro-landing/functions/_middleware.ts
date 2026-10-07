@@ -492,6 +492,9 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     if (checked.isMarkdown) {
       const headers = withRateLimit(new Headers(mdResp.headers));
       addVary(headers, 'Accept', 'Accept-Encoding');
+      // The shared CDN has served a cached HTML variant to Markdown clients
+      // despite Vary: Accept. Keep negotiated representations out of shared cache.
+      headers.set('cache-control', 'no-store');
       headers.set('x-content-type-options', 'nosniff');
       if (request.method === 'HEAD') await checked.body?.cancel();
       return new Response(request.method === 'HEAD' ? null : checked.body, {
@@ -556,6 +559,10 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   if (contentType.includes('text/html')) {
     const headers = withRateLimit(new Headers(response.headers));
     addVary(headers, 'Accept', 'Accept-Encoding');
+    if (!pathname.includes('.') && !pathname.startsWith('/api/')) {
+      // Keep extensionless page responses isolated from shared CDN variants.
+      headers.set('cache-control', 'no-store');
+    }
     if (request.method === 'HEAD') await response.body?.cancel();
     return new Response(request.method === 'HEAD' ? null : response.body, {
       status: response.status,
