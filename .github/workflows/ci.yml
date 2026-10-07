@@ -21,7 +21,8 @@ jobs:
           corepack enable
           corepack install
       - run: pnpm install --frozen-lockfile
-      - run: pnpm audit --audit-level=high
+      - run: node --test scripts/security-policy.test.mjs
+      - run: node scripts/check-security.mjs
       - run: pnpm run build
       - name: Preserve independent game lockfile
         run: git diff --exit-code -- ../pnpm-lock.yaml
