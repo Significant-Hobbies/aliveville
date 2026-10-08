@@ -1,0 +1,11 @@
+{
+  "schema": "fleet.product-art-provenance.v1",
+  "product": "AliveVille",
+  "projectId": "ai-game",
+  "asset": "/footer-art/aliveville-town-world-v1.webp",
+  "sha256": "162f9f5fdc0123333fbe35ce488193e50cb497ab6867de26bfd55988a38d5d87",
+  "bytes": 285976,
+  "dimensions": [2172, 724],
+  "attribution": "Original illustration for AliveVille. Created from the public product concept; the scene depicts an invented town and characters and is not a game screenshot or evidence of live world state.",
+  "publicStatus": "product-owned original concept artwork"
+}

@@ -35,3 +35,4 @@ modal/__pycache__/
 # Local agent logs / scratch
 .agent-logs/
 .devin/
+.fleet-local/
