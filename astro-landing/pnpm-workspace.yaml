@@ -1,0 +1,9 @@
+packages:
+  - .
+
+onlyBuiltDependencies:
+  - esbuild
+
+# GHSA-68fv-2mgg-jv7q: Tailwind's compatible range retains 1.2.1 on import.
+overrides:
+  source-map-js: 1.2.2

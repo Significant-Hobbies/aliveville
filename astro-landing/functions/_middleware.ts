@@ -195,11 +195,138 @@ function markdownPathFor(pathname: string): string {
   return path === '/' ? '/index.md' : `${path}.md`;
 }
 
+function isMarkdownContentType(contentType: string | null): boolean {
+  return contentType?.split(';', 1)[0].trim().toLowerCase() === 'text/markdown';
+}
+
+async function inspectMarkdown(response: Response): Promise<{
+  isMarkdown: boolean;
+  body: ReadableStream<Uint8Array> | null;
+}> {
+  if (response.status !== 200 || !isMarkdownContentType(response.headers.get('content-type'))) {
+    await response.body?.cancel();
+    return { isMarkdown: false, body: null };
+  }
+  if (!response.body) return { isMarkdown: true, body: null };
+
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  const prefixChunks: Uint8Array[] = [];
+  let total = 0;
+  try {
+    while (total < 1024) {
+      const { done, value } = await reader.read();
+      if (done || !value) break;
+      chunks.push(value);
+      const prefixChunk = value.subarray(0, 1024 - total);
+      prefixChunks.push(prefixChunk);
+      total += prefixChunk.byteLength;
+      if (prefixChunk.byteLength < value.byteLength) break;
+    }
+  } catch (error) {
+    await reader.cancel(error);
+    reader.releaseLock();
+    throw error;
+  }
+
+  const prefix = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of prefixChunks) {
+    prefix.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  const text = new TextDecoder()
+    .decode(prefix)
+    .replace(/^\uFEFF/, '')
+    .trimStart();
+  const documentStart = text.replace(/^(?:<!--[\s\S]*?-->\s*)+/, '');
+  if (/^(?:<!doctype\s+html\b|<html\b)/i.test(documentStart)) {
+    await reader.cancel();
+    reader.releaseLock();
+    return { isMarkdown: false, body: null };
+  }
+
+  let chunkIndex = 0;
+  const body = new ReadableStream<Uint8Array>({
+    async pull(controller) {
+      if (chunkIndex < chunks.length) {
+        controller.enqueue(chunks[chunkIndex++]);
+        return;
+      }
+      try {
+        const { done, value } = await reader.read();
+        if (done) {
+          reader.releaseLock();
+          controller.close();
+        } else if (value) {
+          controller.enqueue(value);
+        }
+      } catch (error) {
+        reader.releaseLock();
+        controller.error(error);
+      }
+    },
+    async cancel(reason) {
+      try {
+        await reader.cancel(reason);
+      } finally {
+        reader.releaseLock();
+      }
+    },
+  });
+  return { isMarkdown: true, body };
+}
+
+function isXmlContentType(contentType: string | null): boolean {
+  const mediaType = contentType?.split(';', 1)[0].trim().toLowerCase();
+  return (
+    mediaType === 'application/xml' ||
+    mediaType === 'text/xml' ||
+    /^application\/[\w.+-]+\+xml$/.test(mediaType || '')
+  );
+}
+
 function withRateLimit(headers: Headers): Headers {
   headers.set('ratelimit-limit', String(RATE_LIMIT));
   headers.set('ratelimit-remaining', String(RATE_LIMIT));
   headers.set('ratelimit-reset', String(RATE_LIMIT_WINDOW));
   return headers;
+}
+
+function addVary(headers: Headers, ...values: string[]): void {
+  const existing = (headers.get('vary') || '')
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean);
+  if (existing.includes('*')) return;
+  const seen = new Set(existing.map((value) => value.toLowerCase()));
+  for (const value of values) {
+    if (!seen.has(value.toLowerCase())) {
+      existing.push(value);
+      seen.add(value.toLowerCase());
+    }
+  }
+  headers.set('vary', existing.join(', '));
+}
+
+async function fetchMarkdownAsset(env: Env, url: URL, request: Request): Promise<Response> {
+  const headers = new Headers();
+  const accept = request.headers.get('accept');
+  if (accept) headers.set('accept', accept);
+  const probe = new Request(url.toString(), { method: 'GET', headers });
+  return env.ASSETS.fetch(probe);
+}
+
+async function passThroughAssetError(response: Response, request: Request): Promise<Response> {
+  const headers = withRateLimit(new Headers(response.headers));
+  addVary(headers, 'Accept', 'Accept-Encoding');
+  const bodyless = request.method === 'HEAD' || response.status === 204 || response.status === 304;
+  if (bodyless) await response.body?.cancel();
+  return new Response(bodyless ? null : response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
 }
 
 function jsonError(status: number, code: string, message: string, path: string): Response {
@@ -213,7 +340,7 @@ function jsonError(status: number, code: string, message: string, path: string):
   return new Response(JSON.stringify({ error: { code, message, path } }), { status, headers });
 }
 
-function markdown404(pathname: string, origin: string): Response {
+function markdown404(pathname: string, origin: string, method: string = 'GET'): Response {
   const body = `# 404 — Not Found
 
 \`${pathname}\` does not exist on ${origin}.
@@ -230,10 +357,26 @@ function markdown404(pathname: string, origin: string): Response {
     new Headers({
       'content-type': 'text/markdown; charset=utf-8',
       'cache-control': 'no-store',
+      vary: 'Accept, Accept-Encoding',
       'x-content-type-options': 'nosniff',
     })
   );
-  return new Response(body, { status: 404, headers });
+  return new Response(method === 'HEAD' ? null : body, { status: 404, headers });
+}
+
+function notFound(pathname: string, method: string): Response {
+  const headers = withRateLimit(
+    new Headers({
+      'content-type': 'text/plain; charset=utf-8',
+      'cache-control': 'no-store',
+      vary: 'Accept, Accept-Encoding',
+      'x-content-type-options': 'nosniff',
+    })
+  );
+  return new Response(method === 'HEAD' ? null : `Not found: ${pathname}\n`, {
+    status: 404,
+    headers,
+  });
 }
 
 export const onRequest: PagesFunction<Env> = async (context) => {
@@ -241,6 +384,9 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   const url = new URL(request.url);
   const pathname = url.pathname;
   const origin = url.origin;
+
+  // /game is routed separately to the game Worker on the canonical domain.
+  if (pathname === '/game' || pathname.startsWith('/game/')) return next();
 
   // /openapi.json — serve the spec directly
   if (pathname === '/openapi.json') {
@@ -254,33 +400,112 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     return new Response(JSON.stringify(OPENAPI_SPEC, null, 2), { headers });
   }
 
+  // Keep the documented sitemap URL as an alias for Astro's generated index.
+  if (pathname === '/sitemap.xml' && (request.method === 'GET' || request.method === 'HEAD')) {
+    const indexUrl = new URL('/sitemap-index.xml', url);
+    const indexHeaders = new Headers();
+    for (const name of ['accept', 'accept-encoding', 'if-none-match', 'if-modified-since']) {
+      const value = request.headers.get(name);
+      if (value) indexHeaders.set(name, value);
+    }
+    const indexRequest = new Request(indexUrl.toString(), {
+      method: 'GET',
+      headers: indexHeaders,
+    });
+    const indexResponse = await env.ASSETS.fetch(indexRequest);
+    const contentType = indexResponse.headers.get('content-type');
+    if (indexResponse.status === 200 && isXmlContentType(contentType)) {
+      const headers = withRateLimit(new Headers(indexResponse.headers));
+      if (request.method === 'HEAD') await indexResponse.body?.cancel();
+      return new Response(request.method === 'HEAD' ? null : indexResponse.body, {
+        status: 200,
+        statusText: indexResponse.statusText,
+        headers,
+      });
+    }
+
+    if (indexResponse.status !== 200 && indexResponse.status !== 404) {
+      return passThroughAssetError(indexResponse, request);
+    }
+
+    await indexResponse.body?.cancel();
+    return new Response(request.method === 'HEAD' ? null : 'Sitemap not found.\n', {
+      status: 404,
+      headers: withRateLimit(
+        new Headers({
+          'content-type': 'text/plain; charset=utf-8',
+          'cache-control': 'no-store',
+          'x-content-type-options': 'nosniff',
+        })
+      ),
+    });
+  }
+
   // JSON error for unknown /api/* paths (excluding /api/ai which is a static file)
   if (pathname.startsWith('/api/') && pathname !== '/api/ai') {
     return jsonError(404, 'not_found', `Unknown API path: ${pathname}`, pathname);
   }
 
+  // Validate direct Markdown URLs too: Pages _headers can label its HTML SPA
+  // fallback as Markdown before this middleware sees the response.
+  if (
+    (request.method === 'GET' || request.method === 'HEAD') &&
+    pathname.endsWith('.md') &&
+    !pathname.startsWith('/api/')
+  ) {
+    const markdownResponse = await fetchMarkdownAsset(env, url, request);
+    if (markdownResponse.status >= 500) return passThroughAssetError(markdownResponse, request);
+    if (markdownResponse.status === 404) {
+      await markdownResponse.body?.cancel();
+      return markdown404(pathname.slice(0, -3) || '/', origin, request.method);
+    }
+    if (markdownResponse.status !== 200) return passThroughAssetError(markdownResponse, request);
+    const checked = await inspectMarkdown(markdownResponse);
+    if (!checked.isMarkdown)
+      return markdown404(pathname.slice(0, -3) || '/', origin, request.method);
+    const headers = withRateLimit(new Headers(markdownResponse.headers));
+    if (request.method === 'HEAD') await checked.body?.cancel();
+    return new Response(request.method === 'HEAD' ? null : checked.body, {
+      status: 200,
+      statusText: markdownResponse.statusText,
+      headers,
+    });
+  }
+
   // Accept: text/markdown negotiation for HTML pages that have a .md alternate.
   if (
     (request.method === 'GET' || request.method === 'HEAD') &&
-    !pathname.endsWith('.md') &&
     !pathname.includes('.') &&
     !pathname.startsWith('/api/') &&
     wantsMarkdown(request)
   ) {
     const mdPath = markdownPathFor(pathname);
     const mdUrl = new URL(mdPath, url);
-    const mdReq = new Request(mdUrl.toString(), request);
-    const mdResp = await env.ASSETS.fetch(mdReq);
-    if (mdResp.status === 200) {
+    const mdResp = await fetchMarkdownAsset(env, mdUrl, request);
+    if (mdResp.status >= 500) return passThroughAssetError(mdResp, request);
+    if (mdResp.status === 404) {
+      await mdResp.body?.cancel();
+      return markdown404(pathname, origin, request.method);
+    }
+    if (mdResp.status !== 200) return passThroughAssetError(mdResp, request);
+    const checked = await inspectMarkdown(mdResp);
+    if (checked.isMarkdown) {
       const headers = withRateLimit(new Headers(mdResp.headers));
-      headers.set('content-type', 'text/markdown; charset=utf-8');
-      headers.set('vary', 'Accept, Accept-Encoding');
+      addVary(headers, 'Accept', 'Accept-Encoding');
+      // The shared CDN has served a cached HTML variant to Markdown clients
+      // despite Vary: Accept. Keep negotiated representations out of shared cache.
+      headers.set('cache-control', 'no-store');
       headers.set('x-content-type-options', 'nosniff');
-      return new Response(request.method === 'HEAD' ? null : mdResp.body, {
+      if (request.method === 'HEAD') await checked.body?.cancel();
+      return new Response(request.method === 'HEAD' ? null : checked.body, {
         status: 200,
         headers,
       });
     }
+
+    // Pages' SPA fallback can return homepage HTML with a misleading Markdown
+    // content type. The bounded body-prefix check rejects that false alternate.
+    return markdown404(pathname, origin, request.method);
   }
 
   // Pass through to static assets first — only intercept 404s after.
@@ -289,20 +514,57 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   // Agent-friendly 404: markdown body for Accept: text/markdown on non-asset, non-API paths.
   if (response.status === 404 && !pathname.startsWith('/api/') && !pathname.includes('.')) {
     if (wantsMarkdown(request)) {
-      return markdown404(pathname, origin);
+      return markdown404(pathname, origin, request.method);
     }
     const headers = withRateLimit(new Headers(response.headers));
-    headers.set('vary', 'Accept, Accept-Encoding');
-    return new Response(response.body, { status: 404, headers });
+    addVary(headers, 'Accept', 'Accept-Encoding');
+    return new Response(request.method === 'HEAD' ? null : response.body, { status: 404, headers });
+  }
+
+  // Pages can serve its SPA homepage as a successful fallback for unknown
+  // extensionless URLs. A real Markdown alternate identifies the page without
+  // hardcoding route names; new agent-facing pages add their .md beside the HTML.
+  if (
+    response.status === 200 &&
+    (request.method === 'GET' || request.method === 'HEAD') &&
+    !pathname.startsWith('/api/') &&
+    !pathname.includes('.') &&
+    (response.headers.get('content-type') || '').toLowerCase().includes('text/html')
+  ) {
+    const alternateUrl = new URL(markdownPathFor(pathname), url);
+    const alternate = await fetchMarkdownAsset(env, alternateUrl, request);
+    if (alternate.status >= 500) {
+      await response.body?.cancel();
+      return passThroughAssetError(alternate, request);
+    }
+    if (alternate.status === 404) {
+      await alternate.body?.cancel();
+      await response.body?.cancel();
+      return notFound(pathname, request.method);
+    }
+    if (alternate.status !== 200) {
+      await response.body?.cancel();
+      return passThroughAssetError(alternate, request);
+    }
+    const checked = await inspectMarkdown(alternate);
+    if (!checked.isMarkdown) {
+      await response.body?.cancel();
+      return notFound(pathname, request.method);
+    }
+    await checked.body?.cancel();
   }
 
   // Add Vary: Accept to HTML responses that have markdown alternates
   const contentType = response.headers.get('content-type') || '';
   if (contentType.includes('text/html')) {
     const headers = withRateLimit(new Headers(response.headers));
-    const vary = headers.get('vary');
-    headers.set('vary', vary ? `${vary}, Accept, Accept-Encoding` : 'Accept, Accept-Encoding');
-    return new Response(response.body, {
+    addVary(headers, 'Accept', 'Accept-Encoding');
+    if (!pathname.includes('.') && !pathname.startsWith('/api/')) {
+      // Keep extensionless page responses isolated from shared CDN variants.
+      headers.set('cache-control', 'no-store');
+    }
+    if (request.method === 'HEAD') await response.body?.cancel();
+    return new Response(request.method === 'HEAD' ? null : response.body, {
       status: response.status,
       statusText: response.statusText,
       headers,
@@ -311,7 +573,8 @@ export const onRequest: PagesFunction<Env> = async (context) => {
 
   // Add rate-limit headers to all other responses.
   const headers = withRateLimit(new Headers(response.headers));
-  return new Response(response.body, {
+  if (request.method === 'HEAD') await response.body?.cancel();
+  return new Response(request.method === 'HEAD' ? null : response.body, {
     status: response.status,
     statusText: response.statusText,
     headers,
