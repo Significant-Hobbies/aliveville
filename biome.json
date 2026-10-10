@@ -17,7 +17,8 @@
       "!**/pnpm-lock.yaml",
       "!**/package-lock.json",
       "!**/tsconfig.tsbuildinfo",
-      "!**/fixtures"
+      "!**/fixtures",
+      "!astro-landing/public/ui"
     ]
   },
   "formatter": {
