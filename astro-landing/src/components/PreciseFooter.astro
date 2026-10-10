@@ -1,160 +1,61 @@
-<footer class="aliveville-footer-region" aria-label="AliveVille footer">
-<fleet-footer-extension
-  data-fleet-footer-project="ai-game"
-  product-name="AliveVille"
-  theme="dark"
-  surface="web"
-  font-base="/fonts/fleet-footer-precise-v1/"
-  signature-font="newsreader"
-  signature-name="ALIVEVILLE"
-  art-src="/footer-art/aliveville-town-world-v1.webp"
-  art-alt="An invented village at dusk, with residents meeting along garden paths between warmly lit homes."
-  art-width="2172"
-  art-height="724"
-  art-position="50% 58%"
-  art-credit="Original illustration for AliveVille"
+---
+// Framework-free StudioFooter (SaaS Maker UI v0.1.15). Files in public/ui/ are the
+// committed footer.css / footer.js from that tag; replace them together on upgrade.
+const config = {
+  summary:
+    'A paused AI world-simulator experiment. The hosted game is offline; the source is public. Built by Sarthak Agrawal.',
+  legal: `© ${new Date().getFullYear()} AliveVille · Open-source experiment`,
+  privacyUrl: '/privacy',
+  art: {
+    src: '/footer-art/aliveville-town-world-v1.webp',
+    alt: 'An invented village at dusk, with residents meeting along garden paths between warmly lit homes.',
+    position: '50% 58%',
+  },
+  groups: [
+    {
+      title: 'Project',
+      links: [
+        { label: 'AI world simulator', href: '/ai-world-simulator' },
+        { label: 'Privacy', href: '/privacy' },
+        { label: 'Terms', href: '/terms' },
+      ],
+    },
+    {
+      title: 'Resources',
+      links: [
+        { label: 'Source on GitHub', href: 'https://github.com/sarthakagrawal927/aliveville' },
+        { label: 'Sarthak', href: 'https://sarthakagrawal.dev' },
+        { label: 'Foundry', href: 'https://sassmaker.com' },
+      ],
+    },
+  ],
+};
+---
+<link rel="stylesheet" href="/ui/footer.css" />
+<script type="module" src="/ui/footer.js"></script>
+<studio-footer
+  product="AliveVille"
+  url="https://aliveville.com"
+  catalog-id="ai-game"
+  capture="newsletter"
+  variant="studio"
+  art-mode="scene"
+  wordmark="poster"
+  data-theme="dark"
+  data-mode="dark"
 >
-  <div slot="navigation" class="aliveville-precise-footer">
-    <div class="identity">
-      <a class="wordmark" href="/" aria-label="AliveVille home">ALIVEVILLE</a>
-      <p>
-        A paused AI world-simulator experiment. The hosted game is offline; the source is public.
-        Built by Sarthak Agrawal.
-      </p>
-    </div>
-    <nav aria-label="AliveVille footer navigation">
-      <h2>Project</h2>
-      <ul>
-        <li><a href="/ai-world-simulator">AI world simulator</a></li>
-        <li><a href="/privacy">Privacy</a></li>
-        <li><a href="/terms">Terms</a></li>
-      </ul>
-    </nav>
-    <nav aria-label="AliveVille resources">
-      <h2>Resources</h2>
-      <ul>
-        <li>
-          <a href="https://github.com/sarthakagrawal927/aliveville" target="_blank" rel="noopener noreferrer">
-            Source on GitHub
-          </a>
-        </li>
-        <li><a href="https://sarthakagrawal.dev" target="_blank" rel="noopener noreferrer">Sarthak</a></li>
-        <li><a href="https://sassmaker.com" target="_blank" rel="noopener noreferrer">Foundry</a></li>
-      </ul>
-    </nav>
-    <p class="copyright">© {new Date().getFullYear()} AliveVille · Open-source experiment</p>
-  </div>
-</fleet-footer-extension>
+  <script type="application/json" set:html={JSON.stringify(config)} />
+</studio-footer>
 
-<script is:inline src="https://sassmaker.com/project-strip.js?v=precise-b0adaa67" data-project="ai-game" data-theme="dark" data-host-only="true" defer></script>
-<script is:inline src="https://sassmaker.com/ai-chat-footer.js?v=precise-b0adaa67" data-project="ai-game" data-name="AliveVille" data-theme="dark" data-surface="web" data-host-only="true" defer></script>
-</footer>
-
-<style>
-  .aliveville-footer-region {
-    display: block;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    background: #010102;
-    color: #d1d1d6;
+<style is:global>
+  /* Library gap (v0.1.15): in the stacked mobile layout the email input's flex-1 collapses its height. */
+  studio-footer form[data-subscribe] input[type='email'] {
+    flex: none;
+    min-height: 3rem;
   }
-
-  fleet-footer-extension {
-    --fleet-footer-mobile-signature-size: clamp(3rem, 16vw, 6.125rem);
-    display: block;
-    width: 100%;
-    background: #010102;
-    color: #d1d1d6;
-  }
-
-  .aliveville-precise-footer {
-    container-type: inline-size;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.5rem;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    color: #d1d1d6;
-    font: 0.875rem/1.55 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  }
-
-  .identity .wordmark {
-    color: #fff;
-    font-family: ui-serif, 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
-    font-size: 1.2rem;
-    font-weight: 900;
-    letter-spacing: 0.4em;
-    text-decoration: none;
-  }
-
-  .identity p {
-    max-width: 28rem;
-    margin: 1rem 0 0;
-    color: #9999a3;
-  }
-
-  .identity {
-    grid-column: 1 / -1;
-  }
-
-  nav h2 {
-    margin: 0 0 0.8rem;
-    color: #aaaab2;
-    font: 600 0.7rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-  }
-
-  nav ul {
-    display: grid;
-    gap: 0.65rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  nav a {
-    display: inline-flex;
-    min-height: 2.75rem;
-    align-items: center;
-    color: #c3c3ca;
-    text-decoration: none;
-    text-underline-offset: 0.22em;
-  }
-
-  nav a:hover,
-  nav a:focus-visible {
-    color: #f8d44e;
-    text-decoration: underline;
-  }
-
-  nav a:focus-visible,
-  .wordmark:focus-visible {
-    outline: 2px solid #f8d44e;
-    outline-offset: 4px;
-  }
-
-  .copyright {
-    grid-column: 1 / -1;
-    margin: 0;
-    padding-top: 0.9rem;
-    border-top: 1px solid rgb(255 255 255 / 8%);
-    color: #888891;
-    font: 0.65rem/1.5 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  @container (min-width: 640px) {
-    .aliveville-precise-footer {
-      grid-template-columns: minmax(16rem, 1.5fr) repeat(2, minmax(8rem, 0.7fr));
-    }
-
-    .identity {
-      grid-column: auto;
+  @media (min-width: 640px) {
+    studio-footer form[data-subscribe] input[type='email'] {
+      flex: 1 1 0%;
     }
   }
 </style>
