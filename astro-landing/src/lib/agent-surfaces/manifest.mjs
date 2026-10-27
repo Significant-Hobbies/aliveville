@@ -53,9 +53,7 @@ export function createAgentSurfaceManifest(config) {
     pages['/index.md'] = pages['/'];
   }
 
-  const surfaces =
-    config.surfaces ||
-    deriveSurfacesFromPages(pages, config.mode || 'static');
+  const surfaces = config.surfaces || deriveSurfacesFromPages(pages, config.mode || 'static');
 
   const catalog = buildApiAiCatalog({
     name: config.name,
@@ -95,7 +93,8 @@ export function createAgentSurfaceManifest(config) {
     pages,
     negotiation: config.negotiation ?? true,
   };
-  if (Object.keys(pages).length) manifest.llmsTxt = buildMarkdownIndex(manifest, listMarkdownRoutes(manifest));
+  if (Object.keys(pages).length)
+    manifest.llmsTxt = buildMarkdownIndex(manifest, listMarkdownRoutes(manifest));
   return manifest;
 }
 
@@ -116,14 +115,20 @@ function deriveSurfacesFromPages(pages, kind) {
     if (seen.has(htmlPath)) continue;
     seen.add(htmlPath);
     const id =
-      htmlPath === '/'
-        ? 'home'
-        : htmlPath.replace(/^\//, '').replace(/\//g, '-') || 'page';
+      htmlPath === '/' ? 'home' : htmlPath.replace(/^\//, '').replace(/\//g, '-') || 'page';
     surfaces.push({
       id,
       url: htmlPath,
       md: markdownPathFor(htmlPath),
-      kind: /** @type {any} */ (kind === 'spa' ? 'spa' : kind === 'collection' ? 'collection' : kind === 'dynamic' ? 'dynamic' : 'static'),
+      kind: /** @type {any} */ (
+        kind === 'spa'
+          ? 'spa'
+          : kind === 'collection'
+            ? 'collection'
+            : kind === 'dynamic'
+              ? 'dynamic'
+              : 'static'
+      ),
     });
   }
 

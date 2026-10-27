@@ -176,14 +176,13 @@ const OPENAPI_SPEC = {
   },
 };
 
-
 function normalizePath(pathname: string): string {
   if (!pathname || pathname === '/') return '/';
   const withSlash = pathname.startsWith('/') ? pathname : `/${pathname}`;
   return withSlash.replace(/\/{2,}/g, '/').replace(/\/+$/, '') || '/';
 }
 
-function markdownPathFor(pathname: string): string {
+function _markdownPathFor(pathname: string): string {
   const path = normalizePath(pathname);
   return path === '/' ? '/index.md' : `${path}.md`;
 }
@@ -279,7 +278,9 @@ function isXmlContentType(contentType: string | null): boolean {
   );
 }
 
-function withRateLimit(headers: Headers): Headers { return headers; }
+function withRateLimit(headers: Headers): Headers {
+  return headers;
+}
 
 function addVary(headers: Headers, ...values: string[]): void {
   const existing = (headers.get('vary') || '')
@@ -463,7 +464,12 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   }
 
   // Only source-registered pages may negotiate a public mirror.
-  if ((request.method === 'GET' || request.method === 'HEAD') && !pathname.startsWith('/api/') && !pathname.includes('.') && wantsMarkdown(request)) {
+  if (
+    (request.method === 'GET' || request.method === 'HEAD') &&
+    !pathname.startsWith('/api/') &&
+    !pathname.includes('.') &&
+    wantsMarkdown(request)
+  ) {
     return markdown404(pathname, SITE_ORIGIN, request.method);
   }
 
@@ -471,7 +477,11 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   let response = await next();
   const publicRoute = routes.find((route) => route.path === pathname);
   if (publicRoute && response.ok && response.headers.get('content-type')?.includes('text/html')) {
-    response = advertiseMarkdown(response, SITE_ORIGIN, pathname === '/' ? '/index.md' : `${pathname}.md`);
+    response = advertiseMarkdown(
+      response,
+      SITE_ORIGIN,
+      pathname === '/' ? '/index.md' : `${pathname}.md`
+    );
   }
 
   // Agent-friendly 404: markdown body for Accept: text/markdown on non-asset, non-API paths.
@@ -485,7 +495,15 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   }
 
   // The explicit public source registry distinguishes real pages from SPA fallback.
-  if (response.status === 200 && response.headers.get('content-type')?.includes('text/html') && !pathname.includes('.') && !routes.some((route) => route.path === pathname.replace(/\/$/, '') || (pathname === '/' && route.path === '/'))) {
+  if (
+    response.status === 200 &&
+    response.headers.get('content-type')?.includes('text/html') &&
+    !pathname.includes('.') &&
+    !routes.some(
+      (route) =>
+        route.path === pathname.replace(/\/$/, '') || (pathname === '/' && route.path === '/')
+    )
+  ) {
     await response.body?.cancel();
     return notFound(pathname, request.method);
   }
