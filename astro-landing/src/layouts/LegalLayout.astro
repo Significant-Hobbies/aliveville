@@ -16,6 +16,8 @@ const canonical = new URL(path, SITE).href;
     <meta name="author" content="Sarthak Agrawal" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <link rel="canonical" href={canonical} />
+    <meta name="ai-summary" content={description} />
+    <link rel="alternate" type="text/markdown" href={`${canonical}.md`} />
     <meta property="og:url" content={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />

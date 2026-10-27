@@ -1,17 +1,18 @@
 ---
+import copy from '../content/readable/terms.json';
 import LegalLayout from '../layouts/LegalLayout.astro';
 ---
-<LegalLayout title="Terms — Aliveville" description="Terms of use for aliveville.com." path="/terms">
+<LegalLayout title={copy.title} description={copy.description} path="/terms">
   <main style="max-width:42rem;margin:0 auto;padding:4rem 1.5rem;line-height:1.7;color:#d1d1d6;">
-    <a href="/" style="font-size:0.75rem;color:#888;">← Aliveville</a>
-    <h1 style="margin-top:1rem;font-size:2rem;">Terms of Use</h1>
-    <p style="font-size:0.75rem;color:#888;">Last updated: June 10, 2026</p>
+    <a href={copy.links.link_1} style="font-size:0.75rem;color:#888;">{copy.text.aliveville}</a>
+    <h1 style="margin-top:1rem;font-size:2rem;">{copy.text.terms_of_use}</h1>
+    <p style="font-size:0.75rem;color:#888;">{copy.text.last_updated_june_10_2026}</p>
     <p style="margin-top:1rem;">
-      Content and software are provided as-is without warranty. The game experience may change or be withdrawn at any time.
+      {copy.text.content_and_software_are_provided_as}
     </p>
     <p style="margin-top:1rem;">
-      <a href="https://sarthakagrawal.dev" style="color:#f8d44e;">sarthakagrawal.dev</a>
-      · <a href="https://sassmaker.com" style="color:#f8d44e;">sassmaker.com</a>
+      <a href={copy.links.link_2} style="color:#f8d44e;">{copy.text.sarthakagrawal_dev}</a>
+      · <a href={copy.links.link_3} style="color:#f8d44e;">{copy.text.sassmaker_com}</a>
     </p>
   </main>
 </LegalLayout>

@@ -8,9 +8,10 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "node --test scripts/http-cache-security.test.mjs && astro build && node scripts/build-readability.mjs",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test:readability": "node --test scripts/readability.test.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "3.7.4",

@@ -6,6 +6,14 @@ settings:
 
 overrides:
   source-map-js: 1.2.2
+  http-cache-semantics: 4.3.0
+  zod@>=4.0.0 <4.6.6: 4.6.6
+  undici@>=8.0.0 <8.12.2: 8.12.2
+
+patchedDependencies:
+  http-cache-semantics@4.3.0:
+    hash: 1bde1fe699a4c0f618ade5961734d1d414333292a27feacc6780a501009c0c74
+    path: patches/http-cache-semantics@4.3.0.patch
 
 importers:
 
@@ -1063,8 +1071,8 @@ packages:
   html-void-elements@3.0.0:
     resolution: {integrity: sha512-bEqo66MRXsUGxWHV5IP0PUiAWwoEjba4VCzg0LjFJBpchPaTfyfCKTG6bc5F8ucKec3q5y6qOdGyYTSBEvhCrg==}
 
-  http-cache-semantics@4.2.0:
-    resolution: {integrity: sha512-dTxcvPXqPvXBQpq5dUr6mEMJX4oIEFv6bwom3FDwKRDsuIjjJGANqhBuoAn9c1RQJIdAKav33ED65E2ys+87QQ==}
+  http-cache-semantics@4.3.0:
+    resolution: {integrity: sha512-M5t5LlJpS1UHMjvwRQVdFHvPISGeLAxNcrWuJkeGh0KxsqCHZ1O3NXZU/8x7cD0BDcGW8kapxMKTvwlqrNkHkA==}
 
   iron-webcrypto@1.2.1:
     resolution: {integrity: sha512-feOM6FaSr6rEABp/eDfVseKyTMDt+KGpeB35SkVn9Tyn0CqvVsY3EwI0v5i8nMHyJnzCIQf7nsy3p41TPkJZhg==}
@@ -1491,8 +1499,8 @@ packages:
   undici-types@7.18.2:
     resolution: {integrity: sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w==}
 
-  undici@8.11.2:
-    resolution: {integrity: sha512-u4UB2/IrKdU6lFxumHmmo1a3fCQO5tzQllRorfoRS63txhrB7xTpSn1PftwC4qEHkOaqP95fCWW4lJzwErwzhQ==}
+  undici@8.12.2:
+    resolution: {integrity: sha512-XtuDWVdqTLr3NAxm2ly9/hU6kUsJOgGh1RASzMBbsw6aWCOaQzHdW+QQDfdERjfJ2V5vL5pRPa4RetO9UfivDg==}
     engines: {node: '>=22.19.0'}
 
   unified@11.0.5:
@@ -1655,11 +1663,8 @@ packages:
     resolution: {integrity: sha512-4LCcse/U2MHZ63HAJVE+v71o7yOdIe4cZ70Wpf8D/IyjDKYQLV5GD46B+hSTjJsvV5PztjvHoU580EftxjDZFQ==}
     engines: {node: '>=12.20'}
 
-  zod@4.4.3:
-    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
-
-  zod@4.6.5:
-    resolution: {integrity: sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q==}
+  zod@4.6.6:
+    resolution: {integrity: sha512-4UmzQUF5fxvfcYHlbjBmejU+w+hbDnWFx4aS8kBx7nPBHcO2SqPbpAG8snbdg+Xse4pRefR98hgjFgIMCI/UhA==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -1742,7 +1747,7 @@ snapshots:
   '@astrojs/sitemap@3.7.4':
     dependencies:
       sitemap: 9.0.1
-      zod: 4.4.3
+      zod: 4.6.6
 
   '@astrojs/telemetry@3.3.3':
     dependencies:
@@ -2318,7 +2323,7 @@ snapshots:
       get-tsconfig: 5.0.0-beta.6
       github-slugger: 2.0.0
       html-escaper: 3.0.3
-      http-cache-semantics: 4.2.0
+      http-cache-semantics: 4.3.0(patch_hash=1bde1fe699a4c0f618ade5961734d1d414333292a27feacc6780a501009c0c74)
       jsonc-parser: 3.3.1
       magic-string: 1.4.3
       magicast: 0.5.5
@@ -2345,7 +2350,7 @@ snapshots:
       vitefu: 1.1.3(vite@8.3.3(@types/node@24.13.1)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))
       xxhash-wasm: 1.1.0
       yargs-parser: 22.0.0
-      zod: 4.6.5
+      zod: 4.6.6
     optionalDependencies:
       sharp: 0.35.5(@types/node@24.13.1)
     transitivePeerDependencies:
@@ -2589,7 +2594,7 @@ snapshots:
 
   html-void-elements@3.0.0: {}
 
-  http-cache-semantics@4.2.0: {}
+  http-cache-semantics@4.3.0(patch_hash=1bde1fe699a4c0f618ade5961734d1d414333292a27feacc6780a501009c0c74): {}
 
   iron-webcrypto@1.2.1: {}
 
@@ -2995,7 +3000,7 @@ snapshots:
 
   undici-types@7.18.2: {}
 
-  undici@8.11.2: {}
+  undici@8.12.2: {}
 
   unified@11.0.5:
     dependencies:
@@ -3011,7 +3016,7 @@ snapshots:
     dependencies:
       css-tree: 3.2.1
       ohash: 2.0.11
-      undici: 8.11.2
+      undici: 8.12.2
 
   unist-util-is@6.0.1:
     dependencies:
@@ -3085,8 +3090,6 @@ snapshots:
 
   yocto-queue@1.2.2: {}
 
-  zod@4.4.3: {}
-
-  zod@4.6.5: {}
+  zod@4.6.6: {}
 
   zwitch@2.0.4: {}

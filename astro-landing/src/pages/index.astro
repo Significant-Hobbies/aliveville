@@ -1,4 +1,5 @@
 ---
+import copy from '../content/readable/index.json';
 import ThreeBackground from '../components/ThreeBackground.astro';
 import PreciseFooter from '../components/PreciseFooter.astro';
 import '../styles/global.css';
@@ -8,7 +9,7 @@ import '../styles/global.css';
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aliveville — AI civilization simulation game in the browser</title>
+    <title>{copy.title}</title>
     <meta name="description" content="Play an AI civilization simulation in the browser: a 3D town of autonomous agents that live, remember, and react. No install. Free to try." />
     <meta name="keywords" content="AI world simulator, browser AI game, autonomous NPCs, 3D AI town, playable AI simulation, persistent AI agents" />
     <meta name="author" content="Sarthak Agrawal" />
@@ -537,6 +538,8 @@ import '../styles/global.css';
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<meta name="ai-summary" content={copy.summary} />
+<link rel="alternate" type="text/markdown" href="https://aliveville.com/index.md" />
 </head>
 <body>
     <!-- HERO first in DOM so h1 is the earliest paint target (nav/overlays are fixed). -->
@@ -545,30 +548,30 @@ import '../styles/global.css';
             <video preload="none" loop muted playsinline class="w-full h-full object-cover opacity-20 grayscale filter contrast-150" data-hero-video aria-label="Atmospheric video of the town of Ashment">
                 <source src="/assets/villain_lantern_shadow.mp4" type="video/mp4" />
             </video>
-            <p class="sr-only" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Atmospheric background video showing the town of Ashment with shifting lantern light and shadow.</p>
+            <p class="sr-only" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">{copy.text.atmospheric_background_video_showing_the_town}</p>
             <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#010102]/90 to-[#010102]"></div>
         </div>
 
         <div class="relative z-10 max-w-6xl mx-auto text-center space-y-12">
             <div class="flex justify-center">
-                <span class="tag border-white/20 text-white/60">Paused experiment — not currently playable</span>
+                <span class="tag border-white/20 text-white/60">{copy.text.paused_experiment_not_currently_playable}</span>
             </div>
             <h1 class="hero-title animate-reveal">
-                <span class="gradient-text scramble-text" data-value="Aliveville">Aliveville</span>
+                <span class="gradient-text scramble-text" data-value={copy.text.aliveville}>{copy.text.aliveville}</span>
             </h1>
             <p class="max-w-3xl mx-auto text-xl text-white/40 font-light leading-relaxed animate-reveal" style="animation-delay: 0.2s">
-                A paused experiment: a 3D town where 5 AI agents live their own day, remember people, hold grudges, and gossip. The live game server is offline.
+                {copy.text.a_paused_experiment_a_3d_town}
             </p>
             <div class="flex flex-col sm:flex-row justify-center items-center gap-8 pt-8 animate-reveal" style="animation-delay: 0.4s">
-                <a href="https://github.com/Significant-Hobbies/aliveville" class="play-cta magnetic-target">Paused experiment — source on GitHub</a>
+                <a href={copy.links.link_1} class="play-cta magnetic-target">{copy.text.paused_experiment_source_on_github}</a>
                 <button class="font-mono text-[0.6rem] uppercase tracking-[0.3em] text-white/30 hover:text-white transition-all border-b border-white/0 hover:border-white/20 pb-1 magnetic-target" onclick="document.getElementById('features').scrollIntoView({behavior: 'smooth'})">
-                    SEE HOW IT WORKS
+                    {copy.text.see_how_it_works}
                 </button>
             </div>
         </div>
 
         <div class="absolute bottom-16 left-1/2 -translate-x-1/2 opacity-20 flex flex-col items-center gap-6">
-            <span class="font-mono text-[0.5rem] uppercase tracking-[0.5em] text-white/40">Continuum Scroll</span>
+            <span class="font-mono text-[0.5rem] uppercase tracking-[0.5em] text-white/40">{copy.text.continuum_scroll}</span>
             <div class="w-[1px] h-24 bg-gradient-to-b from-white via-white/50 to-transparent"></div>
         </div>
     </section>
@@ -618,8 +621,8 @@ import '../styles/global.css';
     <!-- BENTO FEATURES -->
     <section class="max-w-7xl mx-auto px-6 py-40" id="features">
         <div class="mb-24 space-y-4">
-            <span class="text-[#f8d44e] font-mono text-[0.6rem] uppercase tracking-[0.4em]">Core Protocols</span>
-            <h2 class="text-5xl md:text-7xl font-black tracking-tight text-white">Built for agents <br/> that remember.</h2>
+            <span class="text-[#f8d44e] font-mono text-[0.6rem] uppercase tracking-[0.4em]">{copy.text.core_protocols}</span>
+            <h2 class="text-5xl md:text-7xl font-black tracking-tight text-white">{copy.text.built_for_agents} <br/> {copy.text.that_remember}</h2>
         </div>
 
         <div class="bento-grid">
@@ -627,12 +630,12 @@ import '../styles/global.css';
                 <canvas class="bento-canvas absolute inset-0 z-0 opacity-20 group-hover:opacity-40 transition-opacity" data-type="network"></canvas>
                 <div class="relative z-10">
                     <div class="flex gap-2 mb-8">
-                        <span class="tag">Engine / Intelligence</span>
-                        <span class="tag border-[#f8d44e]/20 text-[#f8d44e]">v2.0 Upgrade</span>
+                        <span class="tag">{copy.text.engine_intelligence}</span>
+                        <span class="tag border-[#f8d44e]/20 text-[#f8d44e]">{copy.text.v2_0_upgrade}</span>
                     </div>
-                    <h3 class="text-4xl font-bold mb-6 text-white">Local GraphRAG</h3>
+                    <h3 class="text-4xl font-bold mb-6 text-white">{copy.text.local_graphrag}</h3>
                     <p class="text-white/40 text-sm leading-relaxed max-w-sm font-light">
-                        NPCs pull from location-aware memory. They only recall what fits their current context and who they know.
+                        {copy.text.npcs_pull_from_location_aware_memory}
                     </p>
                 </div>
             </div>
@@ -641,10 +644,10 @@ import '../styles/global.css';
                 <canvas class="bento-canvas absolute inset-0 z-0 opacity-10 group-hover:opacity-30 transition-opacity" data-type="cycles"></canvas>
                 <div class="relative z-10">
                     <div class="flex gap-2 mb-6">
-                        <span class="tag border-[#f8d44e]/20 text-[#f8d44e]">New: Persistent Loops</span>
+                        <span class="tag border-[#f8d44e]/20 text-[#f8d44e]">{copy.text.new_persistent_loops}</span>
                     </div>
-                    <h3 class="text-2xl font-bold mb-3 text-white">Long-Running Agents</h3>
-                    <p class="text-white/40 text-sm font-light leading-relaxed">The agents keep going after you close the tab. The world ages on its own.</p>
+                    <h3 class="text-2xl font-bold mb-3 text-white">{copy.text.long_running_agents}</h3>
+                    <p class="text-white/40 text-sm font-light leading-relaxed">{copy.text.the_agents_keep_going_after_you}</p>
                 </div>
             </div>
 
@@ -657,8 +660,8 @@ import '../styles/global.css';
                         </svg>
                     </div>
                     <div class="mt-8">
-                        <h4 class="font-bold text-xs mb-1 uppercase tracking-widest text-white">Global Tensions</h4>
-                        <p class="text-[0.65rem] text-white/30 font-mono">Tension that shifts as you play.</p>
+                        <h4 class="font-bold text-xs mb-1 uppercase tracking-widest text-white">{copy.text.global_tensions}</h4>
+                        <p class="text-[0.65rem] text-white/30 font-mono">{copy.text.tension_that_shifts_as_you_play}</p>
                     </div>
                 </div>
             </div>
@@ -672,8 +675,8 @@ import '../styles/global.css';
                         </svg>
                     </div>
                     <div class="mt-8">
-                        <h4 class="font-bold text-xs mb-1 uppercase tracking-widest text-white">World Ingest</h4>
-                        <p class="text-[0.65rem] text-white/30 font-mono">Import a world as JSON and turn it into something playable.</p>
+                        <h4 class="font-bold text-xs mb-1 uppercase tracking-widest text-white">{copy.text.world_ingest}</h4>
+                        <p class="text-[0.65rem] text-white/30 font-mono">{copy.text.import_a_world_as_json_and}</p>
                     </div>
                 </div>
             </div>
@@ -681,9 +684,9 @@ import '../styles/global.css';
             <div class="glass-card bento-item col-span-2 p-12 flex items-center gap-10 overflow-hidden group">
                 <canvas class="bento-canvas absolute inset-0 z-0 opacity-30 group-hover:opacity-50 transition-opacity" data-type="sculpture"></canvas>
                 <div class="relative z-10 flex-1">
-                    <h3 class="text-3xl font-bold mb-4 text-white">3D Playability</h3>
+                    <h3 class="text-3xl font-bold mb-4 text-white">{copy.text.text_3d_playability}</h3>
                     <p class="text-white/40 text-sm leading-relaxed font-light">
-                        Move with WASD through a 3D world with live lighting and atmosphere.
+                        {copy.text.move_with_wasd_through_a_3d}
                     </p>
                 </div>
                 <div class="relative z-10 w-48 h-48 bg-white/5 rounded-2xl border border-white/5 rotate-12 translate-x-12 group-hover:scale-110 transition-transform"></div>
@@ -703,16 +706,16 @@ import '../styles/global.css';
             </div>
 
             <div class="relative z-20 text-center max-w-4xl mx-auto space-y-10">
-                <span class="tag border-[#f8d44e]/30 text-[#f8d44e]">Runs in your browser, no install</span>
+                <span class="tag border-[#f8d44e]/30 text-[#f8d44e]">{copy.text.runs_in_your_browser_no_install}</span>
                 <h2 class="font-display text-5xl md:text-8xl font-black uppercase tracking-tighter text-white">
-                    Step into Ashment
+                    {copy.text.step_into_ashment}
                 </h2>
                 <p class="text-white/50 text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed">
-                    A 3D town full of villagers who run their own lives. They remember you, hold grudges, and talk about you behind your back. This is a paused experiment: the hosted game is offline, and the source is public.
+                    {copy.text.a_3d_town_full_of_villagers}
                 </p>
                 <div class="flex flex-col items-center gap-5 pt-4">
-                    <a href="https://github.com/Significant-Hobbies/aliveville" class="play-cta magnetic-target">Paused experiment — source on GitHub</a>
-                    <span class="font-mono text-[0.6rem] uppercase tracking-[0.3em] text-white/30">Hosted game offline · run it locally from source</span>
+                    <a href={copy.links.link_2} class="play-cta magnetic-target">{copy.text.paused_experiment_source_on_github_2}</a>
+                    <span class="font-mono text-[0.6rem] uppercase tracking-[0.3em] text-white/30">{copy.text.hosted_game_offline_run_it_locally}</span>
                 </div>
             </div>
 
@@ -723,35 +726,35 @@ import '../styles/global.css';
     <section class="relative z-40 border-y border-white/5 bg-[#050507] px-6 py-24">
         <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-16 items-center">
             <div class="space-y-8">
-                <span class="tag border-[#f8d44e]/20 text-[#f8d44e]">World Link Stable</span>
+                <span class="tag border-[#f8d44e]/20 text-[#f8d44e]">{copy.text.world_link_stable}</span>
                 <div class="space-y-5">
-                    <h2 class="text-4xl md:text-6xl font-black tracking-tight text-white">The village keeps moving once you're in.</h2>
+                    <h2 class="text-4xl md:text-6xl font-black tracking-tight text-white">{copy.text.the_village_keeps_moving_once_you}</h2>
                     <p class="text-white/40 text-lg leading-relaxed font-light max-w-xl">
-                        Access Ashment opens the simulation, but the point is what happens after: agents keep their schedules, relationships, and memories in sync, and a director nudges things forward when it gets quiet.
+                        {copy.text.access_ashment_opens_the_simulation_but}
                     </p>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div class="glass-card p-7 min-h-44 flex flex-col justify-between">
-                    <span class="font-mono text-[0.6rem] uppercase tracking-[0.3em] text-white/20">Agents</span>
+                    <span class="font-mono text-[0.6rem] uppercase tracking-[0.3em] text-white/20">{copy.text.agents}</span>
                     <div>
-                        <p class="text-4xl font-black text-white">05</p>
-                        <p class="mt-2 text-sm text-white/35 leading-relaxed">NPCs with their own secrets and trust they earn or lose.</p>
+                        <p class="text-4xl font-black text-white">{copy.text.text_05}</p>
+                        <p class="mt-2 text-sm text-white/35 leading-relaxed">{copy.text.npcs_with_their_own_secrets_and}</p>
                     </div>
                 </div>
                 <div class="glass-card p-7 min-h-44 flex flex-col justify-between">
-                    <span class="font-mono text-[0.6rem] uppercase tracking-[0.3em] text-white/20">Memory</span>
+                    <span class="font-mono text-[0.6rem] uppercase tracking-[0.3em] text-white/20">{copy.text.memory}</span>
                     <div>
-                        <p class="text-4xl font-black text-white">Graph</p>
-                        <p class="mt-2 text-sm text-white/35 leading-relaxed">Local retrieval shapes what they say and do.</p>
+                        <p class="text-4xl font-black text-white">{copy.text.graph}</p>
+                        <p class="mt-2 text-sm text-white/35 leading-relaxed">{copy.text.local_retrieval_shapes_what_they_say}</p>
                     </div>
                 </div>
                 <div class="glass-card p-7 min-h-44 flex flex-col justify-between">
-                    <span class="font-mono text-[0.6rem] uppercase tracking-[0.3em] text-white/20">Loop</span>
+                    <span class="font-mono text-[0.6rem] uppercase tracking-[0.3em] text-white/20">{copy.text.loop}</span>
                     <div>
-                        <p class="text-4xl font-black text-white">Live</p>
-                        <p class="mt-2 text-sm text-white/35 leading-relaxed">A director nudges things forward when the world goes quiet.</p>
+                        <p class="text-4xl font-black text-white">{copy.text.live}</p>
+                        <p class="mt-2 text-sm text-white/35 leading-relaxed">{copy.text.a_director_nudges_things_forward_when}</p>
                     </div>
                 </div>
             </div>
@@ -762,78 +765,78 @@ import '../styles/global.css';
     <section id="faq" class="relative z-40 border-t border-white/5 bg-[#050507] px-6 py-24">
         <div class="max-w-3xl mx-auto space-y-12">
             <div class="space-y-4">
-                <span class="text-[#f8d44e] font-mono text-[0.6rem] uppercase tracking-[0.4em]">FAQ</span>
-                <h2 class="text-4xl md:text-6xl font-black tracking-tight text-white">Questions, answered.</h2>
+                <span class="text-[#f8d44e] font-mono text-[0.6rem] uppercase tracking-[0.4em]">{copy.text.faq}</span>
+                <h2 class="text-4xl md:text-6xl font-black tracking-tight text-white">{copy.text.questions_answered}</h2>
             </div>
 
             <div class="space-y-3">
                 <details class="glass-card p-6 group">
                     <summary class="cursor-pointer list-none flex items-center justify-between gap-4 text-white font-bold text-lg">
-                        <span>What is Aliveville?</span>
+                        <span>{copy.text.what_is_aliveville}</span>
                         <span class="text-[#f8d44e] font-mono text-xl transition-transform group-open:rotate-45">+</span>
                     </summary>
                     <p class="mt-4 text-white/45 text-sm leading-relaxed font-light">
-                        Aliveville is a browser-playable AI world simulator where five autonomous AI agents live their own daily lives in a 3D town. They remember people, hold grudges, and gossip while you explore. No install is required — it runs directly in modern web browsers.
+                        {copy.text.aliveville_is_a_browser_playable_ai}
                     </p>
                 </details>
 
                 <details class="glass-card p-6 group">
                     <summary class="cursor-pointer list-none flex items-center justify-between gap-4 text-white font-bold text-lg">
-                        <span>Is Aliveville free to play?</span>
+                        <span>{copy.text.is_aliveville_free_to_play}</span>
                         <span class="text-[#f8d44e] font-mono text-xl transition-transform group-open:rotate-45">+</span>
                     </summary>
                     <p class="mt-4 text-white/45 text-sm leading-relaxed font-light">
-                        Yes, Aliveville is free to play. It runs in your browser with no install required. You can walk the 3D town using WASD controls and interact with autonomous AI villagers immediately, with no download, account, or payment needed to start exploring.
+                        {copy.text.yes_aliveville_is_free_to_play}
                     </p>
                 </details>
 
                 <details class="glass-card p-6 group">
                     <summary class="cursor-pointer list-none flex items-center justify-between gap-4 text-white font-bold text-lg">
-                        <span>Do the AI agents in Aliveville have memory?</span>
+                        <span>{copy.text.do_the_ai_agents_in_aliveville}</span>
                         <span class="text-[#f8d44e] font-mono text-xl transition-transform group-open:rotate-45">+</span>
                     </summary>
                     <p class="mt-4 text-white/45 text-sm leading-relaxed font-light">
-                        Yes, NPCs use location-aware memory retrieval. They only recall what is relevant to their current context, state, and social bonds. Autonomous loops continue even when you are away, so agents keep living, remembering, and evolving their relationships over time.
+                        {copy.text.yes_npcs_use_location_aware_memory}
                     </p>
                 </details>
 
                 <details class="glass-card p-6 group">
                     <summary class="cursor-pointer list-none flex items-center justify-between gap-4 text-white font-bold text-lg">
-                        <span>Can I play Aliveville right now?</span>
+                        <span>{copy.text.can_i_play_aliveville_right_now}</span>
                         <span class="text-[#f8d44e] font-mono text-xl transition-transform group-open:rotate-45">+</span>
                     </summary>
                     <p class="mt-4 text-white/45 text-sm leading-relaxed font-light">
-                        Not right now. Aliveville is a paused experiment and the hosted game server was shut down on 2026-09-26. It was built to run in the browser with no install; the source is public on GitHub if you want to run it yourself.
+                        {copy.text.not_right_now_aliveville_is_a}
                     </p>
                 </details>
 
                 <details class="glass-card p-6 group">
                     <summary class="cursor-pointer list-none flex items-center justify-between gap-4 text-white font-bold text-lg">
-                        <span>How does the AI world simulation work?</span>
+                        <span>{copy.text.how_does_the_ai_world_simulation}</span>
                         <span class="text-[#f8d44e] font-mono text-xl transition-transform group-open:rotate-45">+</span>
                     </summary>
                     <p class="mt-4 text-white/45 text-sm leading-relaxed font-light">
-                        Agents keep their schedules, relationships, memories, and narrative pressure in sync. The world ticks forward autonomously, aging and evolving even when no one is watching. A director nudges things forward when the world goes quiet, so the simulation never stalls.
+                        {copy.text.agents_keep_their_schedules_relationships_memories}
                     </p>
                 </details>
 
                 <details class="glass-card p-6 group">
                     <summary class="cursor-pointer list-none flex items-center justify-between gap-4 text-white font-bold text-lg">
-                        <span>What can I do in Aliveville?</span>
+                        <span>{copy.text.what_can_i_do_in_aliveville}</span>
                         <span class="text-[#f8d44e] font-mono text-xl transition-transform group-open:rotate-45">+</span>
                     </summary>
                     <p class="mt-4 text-white/45 text-sm leading-relaxed font-light">
-                        Pick a hero, walk the 3D town with WASD controls, and observe autonomous villagers going about their daily lives. You can watch social dynamics like grudges and gossip unfold in real time, and click to talk with the AI agents as you explore.
+                        {copy.text.pick_a_hero_walk_the_3d}
                     </p>
                 </details>
 
                 <details class="glass-card p-6 group">
                     <summary class="cursor-pointer list-none flex items-center justify-between gap-4 text-white font-bold text-lg">
-                        <span>Is Aliveville an AI experiment?</span>
+                        <span>{copy.text.is_aliveville_an_ai_experiment}</span>
                         <span class="text-[#f8d44e] font-mono text-xl transition-transform group-open:rotate-45">+</span>
                     </summary>
                     <p class="mt-4 text-white/45 text-sm leading-relaxed font-light">
-                        Yes, Aliveville is a persistent ecosystem exploring autonomous agent behavior, narrative emergence, and playable 3D exploration. It is an interactive AI world experiment where five agents live, remember, and react on their own, building emergent stories you can witness firsthand.
+                        {copy.text.yes_aliveville_is_a_persistent_ecosystem}
                     </p>
                 </details>
             </div>

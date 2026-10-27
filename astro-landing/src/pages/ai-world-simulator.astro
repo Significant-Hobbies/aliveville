@@ -1,4 +1,5 @@
 ---
+import copy from '../content/readable/ai-world-simulator.json';
 import PreciseFooter from '../components/PreciseFooter.astro';
 ---
 <!doctype html>
@@ -6,7 +7,7 @@ import PreciseFooter from '../components/PreciseFooter.astro';
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI World Simulator in the Browser — Aliveville</title>
+    <title>{copy.title}</title>
     <meta
       name="description"
       content="Play a real AI world simulator free in your browser. Aliveville runs autonomous NPCs with memory, relationships, and grudges in a persistent 3D town — no install."
@@ -83,129 +84,112 @@ import PreciseFooter from '../components/PreciseFooter.astro';
         ]
       }
     </script>
-  </head>
+  <meta name="ai-summary" content={copy.summary} />
+<link rel="alternate" type="text/markdown" href="https://aliveville.com/ai-world-simulator.md" />
+</head>
   <body style="margin:0;background:#010102;">
     <main
       style="max-width:42rem;margin:0 auto;padding:4rem 1.5rem;line-height:1.7;color:#d1d1d6;font-family:ui-sans-serif,system-ui,sans-serif;"
     >
-      <a href="/" style="font-size:0.75rem;color:#888;">← Aliveville</a>
+      <a href={copy.links.link_1} style="font-size:0.75rem;color:#888;">{copy.text.aliveville}</a>
       <h1 style="margin-top:1rem;font-size:2rem;color:#fff;">
-        AI world simulator: autonomous civilization agents (paused experiment)
+        {copy.text.ai_world_simulator_autonomous_civilization_agents}
       </h1>
       <p style="margin-top:1rem;">
-        An <strong>AI world simulator</strong> is a persistent environment where characters act on their
-        own goals instead of waiting for a scripted quest marker. Aliveville is a browser-playable 3D
-        version of that idea: a small town of autonomous agents who remember people, hold grudges, form
-        relationships, and create emergent stories while you walk around.
+        {copy.text.an} <strong>{copy.text.ai_world_simulator}</strong> {copy.text.is_a_persistent_environment_where_characters}
       </p>
       <p>
-        <strong>Status: paused experiment.</strong> The hosted game was shut down on 2026-09-26. See how it
-        works below, or <a href="https://github.com/Significant-Hobbies/aliveville" style="color:#f8d44e">read the source on GitHub</a>.
+        <strong>{copy.text.status_paused_experiment}</strong> {copy.text.the_hosted_game_was_shut_down} <a href={copy.links.link_2} style="color:#f8d44e">{copy.text.read_the_source_on_github}</a>.
       </p>
 
       <img
-        src="/assets/ashment_intro_square.jpg"
-        alt="Aliveville's 3D town — an AI world simulator where autonomous characters remember and react"
+        src={copy.links.link_3}
+        alt={copy.text.aliveville_s_3d_town_an_ai}
         style="width:100%;border-radius:0.75rem;margin:1.5rem 0 0;display:block;"
         loading="lazy"
       />
 
-      <h2 style="color:#fff;font-size:1.25rem;margin:2rem 0 0.75rem">How Aliveville differs from chat NPCs</h2>
+      <h2 style="color:#fff;font-size:1.25rem;margin:2rem 0 0.75rem">{copy.text.how_aliveville_differs_from_chat_npcs}</h2>
       <ul>
         <li>
-          <strong>Agents keep living when you look away</strong> — the day continues; they are not only
-          dialogue trees.
+          <strong>{copy.text.agents_keep_living_when_you_look}</strong> {copy.text.the_day_continues_they_are_not}
         </li>
         <li>
-          <strong>Memory and social state</strong> — who they met, what they were offered, and how prior
-          encounters went.
+          <strong>{copy.text.memory_and_social_state}</strong> {copy.text.who_they_met_what_they_were}
         </li>
         <li>
-          <strong>3D town you can explore</strong> — walk the map; overhear and interrupt instead of only
-          opening a chat panel.
+          <strong>{copy.text.text_3d_town_you_can_explore}</strong> {copy.text.walk_the_map_overhear_and_interrupt}
         </li>
-        <li><strong>Browser-native</strong> — try the public build without downloading a client.</li>
+        <li><strong>{copy.text.browser_native}</strong> {copy.text.try_the_public_build_without_downloading}</li>
       </ul>
 
-      <h2 style="color:#fff;font-size:1.25rem;margin:2rem 0 0.75rem">What a session looks like</h2>
+      <h2 style="color:#fff;font-size:1.25rem;margin:2rem 0 0.75rem">{copy.text.what_a_session_looks_like}</h2>
       <ol>
-        <li>Open the game and drop into the town — agents are already mid-routine.</li>
-        <li>Walk up to a character and talk. They answer with memory of who you are and what happened before.</li>
-        <li>Watch the consequences spread: an argument, a favor, a rumor — the town state changes even when the plot is not yours.</li>
-        <li>Come back later: relationships, grudges, and quests persist across visits.</li>
+        <li>{copy.text.open_the_game_and_drop_into}</li>
+        <li>{copy.text.walk_up_to_a_character_and}</li>
+        <li>{copy.text.watch_the_consequences_spread_an_argument}</li>
+        <li>{copy.text.come_back_later_relationships_grudges_and}</li>
       </ol>
 
-      <h2 style="color:#fff;font-size:1.25rem;margin:2rem 0 0.75rem">How Aliveville compares</h2>
+      <h2 style="color:#fff;font-size:1.25rem;margin:2rem 0 0.75rem">{copy.text.how_aliveville_compares}</h2>
       <p>
-        “AI world simulator” covers a few different products. An honest map of the space:
+        {copy.text.ai_world_simulator_covers_a_few}
       </p>
       <ul>
         <li>
-          <strong>Aliveville</strong> — a 3D town of autonomous agents with memory, playable free in the
-          browser. Small, persistent, and open-source.
+          <strong>{copy.text.aliveville_2}</strong> {copy.text.a_3d_town_of_autonomous_agents}
         </li>
         <li>
-          <strong>World Simulator AI (worldsimulator.ai)</strong> — describe a world in text and it
-          generates a playable scenario around it. Generative breadth rather than one persistent town.
+          <strong>{copy.text.world_simulator_ai_worldsimulator_ai}</strong> {copy.text.describe_a_world_in_text_and}
         </li>
         <li>
-          <strong>AI Dungeon and text adventures</strong> — a narrator that responds to your prompts.
-          Flexible storytelling, but the world only moves when you type.
+          <strong>{copy.text.ai_dungeon_and_text_adventures}</strong> {copy.text.a_narrator_that_responds_to_your}
         </li>
         <li>
-          <strong>Research platforms (SimWorld and friends)</strong> — simulators built to train and
-          evaluate agents at scale. Powerful, but aimed at researchers with an engine install, not at
-          players.
+          <strong>{copy.text.research_platforms_simworld_and_friends}</strong> {copy.text.simulators_built_to_train_and_evaluate}
         </li>
       </ul>
 
-      <h2 style="color:#fff;font-size:1.25rem;margin:2rem 0 0.75rem">Who this is for</h2>
+      <h2 style="color:#fff;font-size:1.25rem;margin:2rem 0 0.75rem">{copy.text.who_this_is_for}</h2>
       <p>
-        Players who want an AI civilization / life-sim sandbox; builders studying agent memory and
-        multi-agent social loops; anyone comparing “AI world simulator” products that claim autonomous
-        NPCs rather than single-player chat skins.
+        {copy.text.players_who_want_an_ai_civilization}
       </p>
 
-      <h2 style="color:#fff;font-size:1.25rem;margin:2rem 0 0.75rem">Frequently asked</h2>
-      <h3 style="color:#e8e8ec;font-size:1rem;margin:1.25rem 0 0.25rem">Can I play Aliveville right now?</h3>
+      <h2 style="color:#fff;font-size:1.25rem;margin:2rem 0 0.75rem">{copy.text.frequently_asked}</h2>
+      <h3 style="color:#e8e8ec;font-size:1rem;margin:1.25rem 0 0.25rem">{copy.text.can_i_play_aliveville_right_now}</h3>
       <p style="margin-top:0;">
-        No. The hosted game is offline; the <a href="https://github.com/Significant-Hobbies/aliveville" style="color:#f8d44e">source is on GitHub</a>.
+        {copy.text.no_the_hosted_game_is_offline} <a href={copy.links.link_4} style="color:#f8d44e">{copy.text.source_is_on_github}</a>.
       </p>
-      <h3 style="color:#e8e8ec;font-size:1rem;margin:1.25rem 0 0.25rem">Do I need to install anything?</h3>
-      <p style="margin-top:0;">The hosted game is offline; run it locally from the GitHub source.</p>
-      <h3 style="color:#e8e8ec;font-size:1rem;margin:1.25rem 0 0.25rem">Do the characters actually remember?</h3>
+      <h3 style="color:#e8e8ec;font-size:1rem;margin:1.25rem 0 0.25rem">{copy.text.do_i_need_to_install_anything}</h3>
+      <p style="margin-top:0;">{copy.text.the_hosted_game_is_offline_run}</p>
+      <h3 style="color:#e8e8ec;font-size:1rem;margin:1.25rem 0 0.25rem">{copy.text.do_the_characters_actually_remember}</h3>
       <p style="margin-top:0;">
-        Yes. Memory and social state persist across encounters, so conversations carry consequences
-        between sessions.
+        {copy.text.yes_memory_and_social_state_persist}
       </p>
-      <h3 style="color:#e8e8ec;font-size:1rem;margin:1.25rem 0 0.25rem">Is it still being built?</h3>
+      <h3 style="color:#e8e8ec;font-size:1rem;margin:1.25rem 0 0.25rem">{copy.text.is_it_still_being_built}</h3>
       <p style="margin-top:0;">
-        Aliveville is an early, opinionated experiment — paused for now, bounded in scope, and open
-        about what it is not yet.
+        {copy.text.aliveville_is_an_early_opinionated_experiment}
       </p>
 
-      <h2 style="color:#fff;font-size:1.25rem;margin:2rem 0 0.75rem">Try it</h2>
+      <h2 style="color:#fff;font-size:1.25rem;margin:2rem 0 0.75rem">{copy.text.try_it}</h2>
       <ol>
         <li>
-          Get the code from <a href="https://github.com/Significant-Hobbies/aliveville" style="color:#f8d44e">GitHub</a> (the hosted game is offline).
+          {copy.text.get_the_code_from} <a href={copy.links.link_5} style="color:#f8d44e">{copy.text.github}</a> {copy.text.the_hosted_game_is_offline}
         </li>
-        <li>Run it locally to explore the town and watch agents act without you driving every line of dialogue.</li>
+        <li>{copy.text.run_it_locally_to_explore_the}</li>
         <li>
-          Read the product overview on the <a href="/" style="color:#f8d44e">homepage</a> or the
-          machine-readable brief in <a href="/llms.txt" style="color:#f8d44e">llms.txt</a>.
+          {copy.text.read_the_product_overview_on_the} <a href={copy.links.link_6} style="color:#f8d44e">{copy.text.homepage}</a> {copy.text.or_the_machine_readable_brief_in} <a href={copy.links.link_7} style="color:#f8d44e">{copy.text.llms_txt}</a>.
         </li>
       </ol>
 
-      <h2 style="color:#fff;font-size:1.25rem;margin:2rem 0 0.75rem">Limits (honest)</h2>
+      <h2 style="color:#fff;font-size:1.25rem;margin:2rem 0 0.75rem">{copy.text.limits_honest}</h2>
       <p>
-        Aliveville is an early, opinionated simulator — not a full MMORPG or a research benchmark suite.
-        Agent count, world size, and dialogue quality are bounded by the public browser build. Claims
-        about “living AI people” mean autonomous simulation loops with memory, not general intelligence.
+        {copy.text.aliveville_is_an_early_opinionated_simulator}
       </p>
 
       <p style="margin-top:2rem; display:flex; align-items:center; gap:0.5rem">
-        Source:
-        <a href="https://github.com/sarthakagrawal927/aliveville" style="color:#f8d44e; display:inline-flex; align-items:center" aria-label="GitHub repository" title="GitHub repository" rel="noopener noreferrer" target="_blank"
+        {copy.text.source}
+        <a href={copy.links.link_8} style="color:#f8d44e; display:inline-flex; align-items:center" aria-label="GitHub repository" title="GitHub repository" rel="noopener noreferrer" target="_blank"
           ><svg viewBox="0 0 16 16" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a
         >
       </p>

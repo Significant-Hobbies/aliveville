@@ -5,16 +5,15 @@ import { spawnSync } from 'node:child_process';
 import config from '../astro.config.mjs';
 import { validateAudit } from './security-policy.mjs';
 
-// Issue #40: this is a reachability disposition, not an upstream patch.
-// Keep the unfiltered audit visible and fail if its reviewed boundary changes.
+// Keep the unfiltered audit visible and preserve the reviewed static boundary.
 const root = fileURLToPath(new URL('../', import.meta.url));
 const manifest = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
 assert.equal(
   manifest.dependencies.astro,
   '7.3.6',
-  'Re-review the advisory boundary when changing Astro'
+  'Re-check the pinned cache patch and static Pages boundary when changing Astro'
 );
-assert.equal(config.output, 'static', 'The reviewed exception requires a static landing');
+assert.equal(config.output, 'static', 'The reviewed Pages boundary requires a static landing');
 assert.equal(
   config.adapter,
   undefined,
@@ -69,9 +68,5 @@ if (result.error) throw result.error;
 if (result.stderr) process.stderr.write(result.stderr);
 process.stdout.write(result.stdout);
 const audit = JSON.parse(result.stdout);
-const residualCount = validateAudit(audit, result.status);
-console.log(
-  residualCount
-    ? 'Reviewed residual: GHSA-ch52-4w7c-c8xp in Astro build tooling. Static/no-image-optimizer boundary passed; raw finding retained. See SECURITY.md.'
-    : 'No installed dependency advisories. Static landing security boundary passed.'
-);
+validateAudit(audit, result.status);
+console.log('No installed dependency advisories. Static landing security boundary passed.');

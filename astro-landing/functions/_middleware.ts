@@ -1,7 +1,9 @@
+import { handleReadability, routes, advertiseMarkdown } from '../src/lib/readability.mjs';
+import { wantsMarkdown } from '../src/lib/agent-surfaces/http.mjs';
 /**
  * Cloudflare Pages Functions middleware — agent SEO surfaces for aliveville.com.
  * Handles /openapi.json, JSON error responses, Accept: text/markdown negotiation
- * for pages with .md alternates, Vary: Accept, rate-limit headers, and
+ * for registered public pages, Vary: Accept, and
  * agent-friendly 404s with markdown recovery body.
  */
 
@@ -10,9 +12,6 @@ interface Env {
 }
 
 const SITE_ORIGIN = 'https://aliveville.com';
-
-const RATE_LIMIT = 60;
-const RATE_LIMIT_WINDOW = 60;
 
 const ERROR_RESPONSE_SCHEMA = {
   type: 'object',
@@ -177,20 +176,13 @@ const OPENAPI_SPEC = {
   },
 };
 
-function wantsMarkdown(request: Request): boolean {
-  const accept = (request.headers.get('accept') || '').toLowerCase();
-  if (!accept.includes('text/markdown')) return false;
-  if (!accept.includes('text/html')) return true;
-  return accept.indexOf('text/markdown') < accept.indexOf('text/html');
-}
-
 function normalizePath(pathname: string): string {
   if (!pathname || pathname === '/') return '/';
   const withSlash = pathname.startsWith('/') ? pathname : `/${pathname}`;
   return withSlash.replace(/\/{2,}/g, '/').replace(/\/+$/, '') || '/';
 }
 
-function markdownPathFor(pathname: string): string {
+function _markdownPathFor(pathname: string): string {
   const path = normalizePath(pathname);
   return path === '/' ? '/index.md' : `${path}.md`;
 }
@@ -287,9 +279,6 @@ function isXmlContentType(contentType: string | null): boolean {
 }
 
 function withRateLimit(headers: Headers): Headers {
-  headers.set('ratelimit-limit', String(RATE_LIMIT));
-  headers.set('ratelimit-remaining', String(RATE_LIMIT));
-  headers.set('ratelimit-reset', String(RATE_LIMIT_WINDOW));
   return headers;
 }
 
@@ -387,6 +376,8 @@ export const onRequest: PagesFunction<Env> = async (context) => {
 
   // /game is routed separately to the game Worker on the canonical domain.
   if (pathname === '/game' || pathname.startsWith('/game/')) return next();
+  const readable = await handleReadability(request);
+  if (readable) return readable;
 
   // /openapi.json — serve the spec directly
   if (pathname === '/openapi.json') {
@@ -472,44 +463,26 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     });
   }
 
-  // Accept: text/markdown negotiation for HTML pages that have a .md alternate.
+  // Only source-registered pages may negotiate a public mirror.
   if (
     (request.method === 'GET' || request.method === 'HEAD') &&
-    !pathname.includes('.') &&
     !pathname.startsWith('/api/') &&
+    !pathname.includes('.') &&
     wantsMarkdown(request)
   ) {
-    const mdPath = markdownPathFor(pathname);
-    const mdUrl = new URL(mdPath, url);
-    const mdResp = await fetchMarkdownAsset(env, mdUrl, request);
-    if (mdResp.status >= 500) return passThroughAssetError(mdResp, request);
-    if (mdResp.status === 404) {
-      await mdResp.body?.cancel();
-      return markdown404(pathname, origin, request.method);
-    }
-    if (mdResp.status !== 200) return passThroughAssetError(mdResp, request);
-    const checked = await inspectMarkdown(mdResp);
-    if (checked.isMarkdown) {
-      const headers = withRateLimit(new Headers(mdResp.headers));
-      addVary(headers, 'Accept', 'Accept-Encoding');
-      // The shared CDN has served a cached HTML variant to Markdown clients
-      // despite Vary: Accept. Keep negotiated representations out of shared cache.
-      headers.set('cache-control', 'no-store');
-      headers.set('x-content-type-options', 'nosniff');
-      if (request.method === 'HEAD') await checked.body?.cancel();
-      return new Response(request.method === 'HEAD' ? null : checked.body, {
-        status: 200,
-        headers,
-      });
-    }
-
-    // Pages' SPA fallback can return homepage HTML with a misleading Markdown
-    // content type. The bounded body-prefix check rejects that false alternate.
-    return markdown404(pathname, origin, request.method);
+    return markdown404(pathname, SITE_ORIGIN, request.method);
   }
 
   // Pass through to static assets first — only intercept 404s after.
-  const response = await next();
+  let response = await next();
+  const publicRoute = routes.find((route) => route.path === pathname);
+  if (publicRoute && response.ok && response.headers.get('content-type')?.includes('text/html')) {
+    response = advertiseMarkdown(
+      response,
+      SITE_ORIGIN,
+      pathname === '/' ? '/index.md' : `${pathname}.md`
+    );
+  }
 
   // Agent-friendly 404: markdown body for Accept: text/markdown on non-asset, non-API paths.
   if (response.status === 404 && !pathname.startsWith('/api/') && !pathname.includes('.')) {
@@ -521,37 +494,18 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     return new Response(request.method === 'HEAD' ? null : response.body, { status: 404, headers });
   }
 
-  // Pages can serve its SPA homepage as a successful fallback for unknown
-  // extensionless URLs. A real Markdown alternate identifies the page without
-  // hardcoding route names; new agent-facing pages add their .md beside the HTML.
+  // The explicit public source registry distinguishes real pages from SPA fallback.
   if (
     response.status === 200 &&
-    (request.method === 'GET' || request.method === 'HEAD') &&
-    !pathname.startsWith('/api/') &&
+    response.headers.get('content-type')?.includes('text/html') &&
     !pathname.includes('.') &&
-    (response.headers.get('content-type') || '').toLowerCase().includes('text/html')
+    !routes.some(
+      (route) =>
+        route.path === pathname.replace(/\/$/, '') || (pathname === '/' && route.path === '/')
+    )
   ) {
-    const alternateUrl = new URL(markdownPathFor(pathname), url);
-    const alternate = await fetchMarkdownAsset(env, alternateUrl, request);
-    if (alternate.status >= 500) {
-      await response.body?.cancel();
-      return passThroughAssetError(alternate, request);
-    }
-    if (alternate.status === 404) {
-      await alternate.body?.cancel();
-      await response.body?.cancel();
-      return notFound(pathname, request.method);
-    }
-    if (alternate.status !== 200) {
-      await response.body?.cancel();
-      return passThroughAssetError(alternate, request);
-    }
-    const checked = await inspectMarkdown(alternate);
-    if (!checked.isMarkdown) {
-      await response.body?.cancel();
-      return notFound(pathname, request.method);
-    }
-    await checked.body?.cancel();
+    await response.body?.cancel();
+    return notFound(pathname, request.method);
   }
 
   // Add Vary: Accept to HTML responses that have markdown alternates
@@ -571,7 +525,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     });
   }
 
-  // Add rate-limit headers to all other responses.
+  // Preserve all other static response headers.
   const headers = withRateLimit(new Headers(response.headers));
   if (request.method === 'HEAD') await response.body?.cancel();
   return new Response(request.method === 'HEAD' ? null : response.body, {

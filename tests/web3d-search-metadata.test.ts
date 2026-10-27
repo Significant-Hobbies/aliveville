@@ -26,7 +26,7 @@ describe('Aliveville game search identity', () => {
     expect(indexNowKey.trim()).toBe('fa7259e2e0d942f1a1267b344a75a143');
   });
 
-  it('publishes an agent-readable catalog with a Markdown mirror per route', () => {
+  it('publishes marketing Markdown without exposing interactive game state', () => {
     const catalog = JSON.parse(readFileSync('astro-landing/public/api-ai.json', 'utf8')) as {
       llmsFull?: string;
       surfaces?: Array<{ id: string; url: string; md: string; kind: string }>;
@@ -36,17 +36,20 @@ describe('Aliveville game search identity', () => {
     expect(catalog.surfaces?.map(({ id }) => id)).toEqual([
       'home',
       'ai-world-simulator',
-      'game',
       'privacy',
       'terms',
     ]);
 
+    expect(catalog.surfaces?.some(({ url }) => new URL(url).pathname.startsWith('/game'))).toBe(
+      false
+    );
     for (const surface of catalog.surfaces ?? []) {
       const pathname = new URL(surface.md).pathname;
-      const relativePath = pathname.startsWith('/game/')
-        ? `web3d/public/${pathname.slice('/game/'.length)}`
-        : `astro-landing/public/${pathname.slice(1)}`;
-      expect(readFileSync(relativePath, 'utf8')).toMatch(/^#\s+\S/m);
+      const document = JSON.parse(
+        readFileSync(`astro-landing/src/content/readable/${pathname.slice(1, -3)}.json`, 'utf8')
+      ) as { path: string; markdown: string };
+      expect(new URL(surface.url).pathname).toBe(document.path);
+      expect(document.markdown).toMatch(/^#\s+\S/m);
     }
   });
 

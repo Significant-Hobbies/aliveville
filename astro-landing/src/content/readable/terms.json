@@ -1,0 +1,20 @@
+{
+  "path": "/terms",
+  "title": "Terms — Aliveville",
+  "description": "Terms of use for aliveville.com.",
+  "summary": "Terms of use for aliveville.com.",
+  "text": {
+    "aliveville": "← Aliveville",
+    "terms_of_use": "Terms of Use",
+    "last_updated_june_10_2026": "Last updated: June 10, 2026",
+    "content_and_software_are_provided_as": "Content and software are provided as-is without warranty. The game experience may change or be withdrawn at any time.",
+    "sarthakagrawal_dev": "sarthakagrawal.dev",
+    "sassmaker_com": "sassmaker.com"
+  },
+  "links": {
+    "link_1": "/",
+    "link_2": "https://sarthakagrawal.dev",
+    "link_3": "https://sassmaker.com"
+  },
+  "markdown": "[{{text.aliveville}} ]({{links.link_1}})\n\n# {{text.terms_of_use}}\n\n{{text.last_updated_june_10_2026}}\n\n{{text.content_and_software_are_provided_as}}\n\n[{{text.sarthakagrawal_dev}} ]({{links.link_2}})[{{text.sassmaker_com}} ]({{links.link_3}})\n"
+}

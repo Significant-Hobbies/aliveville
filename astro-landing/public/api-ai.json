@@ -24,14 +24,6 @@
       "kind": "static"
     },
     {
-      "id": "game",
-      "status": "offline",
-      "note": "Hosted game shut down 2026-09-26; paused experiment. Run locally from source.",
-      "url": "https://aliveville.com/game/",
-      "md": "https://aliveville.com/game/index.md",
-      "kind": "static"
-    },
-    {
       "id": "privacy",
       "url": "https://aliveville.com/privacy",
       "md": "https://aliveville.com/privacy.md",
@@ -47,5 +39,9 @@
   "auth": {
     "public": true,
     "notes": "The public homepage, policies, and machine-readable product information do not require an account."
+  },
+  "availability": {
+    "status": "offline",
+    "note": "Hosted game shut down 2026-09-26; paused experiment. Run locally from source."
   }
 }
