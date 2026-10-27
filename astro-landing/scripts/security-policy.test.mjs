@@ -2,55 +2,46 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { validateAudit } from './security-policy.mjs';
 
-const reviewed = () => ({
-  advisories: {
-    known: {
-      github_advisory_id: 'GHSA-ch52-4w7c-c8xp',
-      module_name: 'http-cache-semantics',
-      severity: 'high',
-      patched_versions: '<0.0.0',
-      findings: [{ version: '4.2.0', paths: ['.>astro>http-cache-semantics'] }],
-    },
-  },
+const clean = () => ({
+  advisories: {},
   muted: [],
-  metadata: { vulnerabilities: { info: 0, low: 0, moderate: 0, high: 1, critical: 0 } },
+  metadata: { vulnerabilities: { info: 0, low: 0, moderate: 0, high: 0, critical: 0 } },
 });
 
-test('rejects the retired exception and accepts an actually clean report', () => {
-  assert.throws(() => validateAudit(reviewed(), 1));
-  const clean = reviewed();
-  clean.advisories = {};
-  clean.metadata.vulnerabilities.high = 0;
-  assert.equal(validateAudit(clean, 0), 0);
+test('accepts an actually clean successful audit', () => {
+  assert.equal(validateAudit(clean(), 0), 0);
 });
-test('new critical advisory cannot inherit the known disposition', () => {
-  const audit = reviewed();
-  audit.advisories.new = { github_advisory_id: 'GHSA-new', severity: 'critical' };
-  assert.throws(() => validateAudit(audit, 1));
+test('rejects any advisory including the retired exception', () => {
+  for (const id of ['GHSA-ch52-4w7c-c8xp', 'GHSA-new']) {
+    const audit = clean();
+    audit.advisories[id] = { github_advisory_id: id };
+    assert.throws(() => validateAudit(audit, 0), /All advisories require remediation/);
+  }
 });
-test('same advisory through a new runtime consumer or version requires review', () => {
-  const audit = reviewed();
-  audit.advisories.known.findings[0].paths.push('.>runtime>http-cache-semantics');
-  assert.throws(() => validateAudit(audit, 1));
-  const upgraded = reviewed();
-  upgraded.advisories.known.findings[0].version = '4.3.0';
-  assert.throws(() => validateAudit(upgraded, 1));
+test('rejects nonzero metadata even without advisory details', () => {
+  for (const severity of ['info', 'low', 'moderate', 'high', 'critical']) {
+    const audit = clean();
+    audit.metadata.vulnerabilities[severity] = 1;
+    assert.throws(() => validateAudit(audit, 0), /Audit metadata must be clean/);
+  }
 });
-test('registry errors, missing findings, and inconsistent counts cannot look clean', () => {
-  assert.throws(() => validateAudit({ error: { code: 'E503' } }, 1));
-  const incomplete = reviewed();
-  incomplete.advisories = {};
-  assert.throws(() => validateAudit(incomplete, 0));
-  assert.throws(() => validateAudit(reviewed(), 2));
+test('rejects registry errors and missing audit fields', () => {
+  assert.throws(
+    () => validateAudit({ ...clean(), error: { code: 'E503' } }, 0),
+    /Audit registry response must be valid/
+  );
+  for (const field of ['advisories', 'metadata']) {
+    const audit = clean();
+    delete audit[field];
+    assert.throws(() => validateAudit(audit, 0), /Audit registry response must be valid/);
+  }
 });
-test('published patch forces remediation rather than permanent tolerance', () => {
-  const audit = reviewed();
-  audit.advisories.known.patched_versions = '>=4.3.1';
-  assert.throws(() => validateAudit(audit, 1), /advisories require remediation/);
-});
-test('muted findings and unexplained exit failures fail closed', () => {
-  const audit = reviewed();
+test('rejects muted findings even when the visible audit is clean', () => {
+  const audit = clean();
   audit.muted = [{ github_advisory_id: 'GHSA-hidden' }];
-  assert.throws(() => validateAudit(audit, 1));
-  assert.throws(() => validateAudit(reviewed(), 0));
+  assert.throws(() => validateAudit(audit, 0), /Do not suppress audit findings/);
+});
+test('rejects unsuccessful commands even with a clean audit payload', () => {
+  assert.throws(() => validateAudit(clean(), 1), /An unexplained audit failure must fail CI/);
+  assert.throws(() => validateAudit(clean(), 2), /Audit command failed: 2/);
 });

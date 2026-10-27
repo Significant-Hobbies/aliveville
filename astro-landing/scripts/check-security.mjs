@@ -11,9 +11,9 @@ const manifest = JSON.parse(await readFile(new URL('../package.json', import.met
 assert.equal(
   manifest.dependencies.astro,
   '7.3.6',
-  'Re-review the advisory boundary when changing Astro'
+  'Re-check the pinned cache patch and static Pages boundary when changing Astro'
 );
-assert.equal(config.output, 'static', 'The reviewed exception requires a static landing');
+assert.equal(config.output, 'static', 'The reviewed Pages boundary requires a static landing');
 assert.equal(
   config.adapter,
   undefined,
