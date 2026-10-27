@@ -10,7 +10,7 @@ export default defineConfig({
   build: { format: 'file', inlineStylesheets: 'always' },
   integrations: [
     sitemap({
-      customPages: ['https://aliveville.com/game/'],
+      filter: (page) => !new URL(page).pathname.startsWith('/game'),
     }),
   ],
   vite: {

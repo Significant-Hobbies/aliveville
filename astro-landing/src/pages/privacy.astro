@@ -1,17 +1,17 @@
 ---
+import copy from '../content/readable/privacy.json';
 import LegalLayout from '../layouts/LegalLayout.astro';
 ---
-<LegalLayout title="Privacy — Aliveville" description="Privacy policy for aliveville.com." path="/privacy">
+<LegalLayout title={copy.title} description={copy.description} path="/privacy">
   <main style="max-width:42rem;margin:0 auto;padding:4rem 1.5rem;line-height:1.7;color:#d1d1d6;">
-    <a href="/" style="font-size:0.75rem;color:#888;">← Aliveville</a>
-    <h1 style="margin-top:1rem;font-size:2rem;">Privacy Policy</h1>
-    <p style="font-size:0.75rem;color:#888;">Last updated: June 10, 2026</p>
+    <a href={copy.links.link_1} style="font-size:0.75rem;color:#888;">{copy.text.aliveville}</a>
+    <h1 style="margin-top:1rem;font-size:2rem;">{copy.text.privacy_policy}</h1>
+    <p style="font-size:0.75rem;color:#888;">{copy.text.last_updated_june_10_2026}</p>
     <p style="margin-top:1rem;">
-      aliveville.com is a static marketing site for an interactive AI world experiment.
-      It does not require an account on this domain. Cloudflare may log standard edge request metadata.
+      {copy.text.aliveville_com_is_a_static_marketing}
     </p>
     <p style="margin-top:1rem;">
-      Contact: <a href="mailto:sarthakagrawal927@gmail.com" style="color:#f8d44e;">sarthakagrawal927@gmail.com</a>
+      {copy.text.contact} <a href={copy.links.link_2} style="color:#f8d44e;">{copy.text.sarthakagrawal927_gmail_com}</a>
     </p>
   </main>
 </LegalLayout>

@@ -1,0 +1,19 @@
+{
+  "path": "/privacy",
+  "title": "Privacy — Aliveville",
+  "description": "Privacy policy for aliveville.com.",
+  "summary": "Privacy policy for aliveville.com.",
+  "text": {
+    "aliveville": "← Aliveville",
+    "privacy_policy": "Privacy Policy",
+    "last_updated_june_10_2026": "Last updated: June 10, 2026",
+    "aliveville_com_is_a_static_marketing": "aliveville.com is a static marketing site for an interactive AI world experiment.\n      It does not require an account on this domain. Cloudflare may log standard edge request metadata.",
+    "contact": "Contact:",
+    "sarthakagrawal927_gmail_com": "sarthakagrawal927@gmail.com"
+  },
+  "links": {
+    "link_1": "/",
+    "link_2": "mailto:sarthakagrawal927@gmail.com"
+  },
+  "markdown": "[{{text.aliveville}} ]({{links.link_1}})\n\n# {{text.privacy_policy}}\n\n{{text.last_updated_june_10_2026}}\n\n{{text.aliveville_com_is_a_static_marketing}}\n\n{{text.contact}} [{{text.sarthakagrawal927_gmail_com}} ]({{links.link_2}})\n"
+}

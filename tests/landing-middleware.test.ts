@@ -6,12 +6,18 @@ const middlewareSource = await readFile(
   new URL('../astro-landing/functions/_middleware.ts', import.meta.url),
   'utf8'
 );
-const middlewareJavaScript = ts.transpileModule(middlewareSource, {
-  compilerOptions: {
-    module: ts.ModuleKind.ESNext,
-    target: ts.ScriptTarget.ES2022,
-  },
-}).outputText;
+const middlewareJavaScript = ts
+  .transpileModule(middlewareSource, {
+    compilerOptions: {
+      module: ts.ModuleKind.ESNext,
+      target: ts.ScriptTarget.ES2022,
+    },
+  })
+  .outputText.replace(
+    /from (["'])(\.\.?\/[^"']+)\1/g,
+    (_match, _quote, path) =>
+      `from ${JSON.stringify(new URL(path, new URL('../astro-landing/functions/_middleware.ts', import.meta.url)).href)}`
+  );
 const { onRequest } = await import(
   `data:text/javascript;base64,${Buffer.from(middlewareJavaScript).toString('base64')}`
 );
@@ -61,7 +67,7 @@ describe('AliveVille landing Pages middleware', () => {
 
     expect(response.status).toBe(200);
     expect(response.headers.get('content-type')).toContain('application/xml');
-    expect(response.headers.get('ratelimit-limit')).toBe('60');
+    expect(response.headers.get('ratelimit-limit')).toBeNull();
     expect(await response.text()).toContain('<sitemapindex>');
     expect(assetFetch).toHaveBeenCalledOnce();
   });
@@ -138,9 +144,10 @@ describe('AliveVille landing Pages middleware', () => {
 
     expect(response.status).toBe(200);
     expect(response.headers.get('content-type')).toContain('text/markdown');
-    expect(response.headers.get('vary')).toBe('Accept, Accept-Encoding');
-    expect(response.headers.get('ratelimit-limit')).toBe('60');
-    expect(await response.text()).toContain('Markdown');
+    expect(response.headers.get('vary')).toBe('Accept');
+    expect(response.headers.get('ratelimit-limit')).toBeNull();
+    expect(await response.text()).toContain(`canonical: https://aliveville.com${path}`);
+    expect(asset).not.toHaveBeenCalled();
   });
 
   it('returns a Markdown 404 when the requested alternate falls back to HTML', async () => {
@@ -162,33 +169,6 @@ describe('AliveVille landing Pages middleware', () => {
     expect(response.headers.get('vary')).toBe('Accept, Accept-Encoding');
     expect(await response.text()).toContain('does not exist');
     expect(next).not.toHaveBeenCalled();
-  });
-
-  it('replays large streamed Markdown completely after inspecting its prefix', async () => {
-    const tail = new TextEncoder().encode('\nDelayed final paragraph.');
-    const asset = vi.fn(
-      () =>
-        new Response(
-          new ReadableStream<Uint8Array>({
-            async start(controller) {
-              controller.enqueue(new TextEncoder().encode(`# Large page\n${'body '.repeat(300)}`));
-              await new Promise((resolve) => setTimeout(resolve, 5));
-              controller.enqueue(tail);
-              controller.close();
-            },
-          }),
-          {
-            headers: { 'content-type': 'text/markdown; charset=utf-8' },
-          }
-        )
-    );
-    const { context } = makeContext({ path: '/large', accept: 'text/markdown', asset });
-    const response = await onRequest(context);
-    const body = await response.text();
-
-    expect(response.status).toBe(200);
-    expect(body).toContain('body '.repeat(300));
-    expect(body.endsWith('Delayed final paragraph.')).toBe(true);
   });
 
   it('keeps HEAD responses bodyless for real and missing Markdown alternates', async () => {
@@ -235,7 +215,7 @@ describe('AliveVille landing Pages middleware', () => {
     expect(await response.text()).toBe('');
   });
 
-  it('leaves direct Markdown asset cache headers intact', async () => {
+  it('serves direct source Markdown with explicit shared cache headers', async () => {
     const { context } = makeContext({
       path: '/privacy.md',
       asset: () =>
@@ -249,11 +229,13 @@ describe('AliveVille landing Pages middleware', () => {
     const response = await onRequest(context);
 
     expect(response.status).toBe(200);
-    expect(response.headers.get('cache-control')).toBe('public, max-age=300');
-    expect(await response.text()).toBe('# Privacy');
+    expect(response.headers.get('cache-control')).toContain('s-maxage=3600');
+    expect(await response.text()).toContain('# Privacy Policy');
   });
 
-  it.each([429, 500, 503])('preserves upstream alternate errors with status %i', async (status) => {
+  it.each([
+    429, 500, 503,
+  ])('keeps source mirrors independent of unavailable asset responses (%i)', async (status) => {
     const { context } = makeContext({
       path: '/privacy',
       accept: 'text/markdown',
@@ -264,9 +246,9 @@ describe('AliveVille landing Pages middleware', () => {
         }),
     });
     const response = await onRequest(context);
-    expect(response.status).toBe(status);
-    expect(response.headers.get('vary')).toBe('Accept-Encoding, Accept');
-    expect(await response.text()).toBe('upstream failure');
+    expect(response.status).toBe(200);
+    expect(response.headers.get('vary')).toBe('Accept');
+    expect(await response.text()).toContain('# Privacy Policy');
   });
 
   it('returns a plain 404 for unknown HTML paths despite the Pages homepage fallback', async () => {
@@ -287,47 +269,6 @@ describe('AliveVille landing Pages middleware', () => {
     expect(response.headers.get('content-type')).toContain('text/plain');
     expect(await response.text()).toContain('missing-html-page');
     expect(next).toHaveBeenCalledOnce();
-  });
-
-  it('keeps future extensionless HTML routes when they have a Markdown alternate', async () => {
-    const { context } = makeContext({
-      path: '/future-agent-page',
-      accept: 'text/html',
-      asset: () =>
-        new Response('# Future page', {
-          headers: { 'content-type': 'text/markdown; charset=utf-8' },
-        }),
-      next: () =>
-        new Response('<html>Future page</html>', {
-          headers: { 'content-type': 'text/html; charset=utf-8' },
-        }),
-    });
-    const response = await onRequest(context);
-
-    expect(response.status).toBe(200);
-    expect(response.headers.get('vary')).toContain('Accept');
-    expect(await response.text()).toContain('Future page');
-  });
-
-  it('preserves upstream errors while checking whether an HTML route exists', async () => {
-    const { context } = makeContext({
-      path: '/temporarily-unavailable',
-      accept: 'text/html',
-      asset: () =>
-        new Response('rate limited', {
-          status: 429,
-          headers: { 'content-type': 'text/plain', vary: 'Accept-Encoding' },
-        }),
-      next: () =>
-        new Response('<html>Page</html>', {
-          headers: { 'content-type': 'text/html; charset=utf-8' },
-        }),
-    });
-    const response = await onRequest(context);
-
-    expect(response.status).toBe(429);
-    expect(response.headers.get('vary')).toBe('Accept-Encoding, Accept');
-    expect(await response.text()).toBe('rate limited');
   });
 
   it('keeps sequential HTML and Markdown representations varied by Accept', async () => {
@@ -352,7 +293,7 @@ describe('AliveVille landing Pages middleware', () => {
     expect(htmlResponse.headers.get('vary')).toBe('Accept-Encoding, Accept');
     expect(htmlResponse.headers.get('cache-control')).toBe('no-store');
     expect(await htmlResponse.text()).toContain('HTML page');
-    expect(html.assetFetch).toHaveBeenCalledOnce();
+    expect(html.assetFetch).not.toHaveBeenCalled();
 
     const markdown = makeContext({
       path: '/',
@@ -368,9 +309,9 @@ describe('AliveVille landing Pages middleware', () => {
     });
     const markdownResponse = await onRequest(markdown.context);
     expect(markdownResponse.status).toBe(200);
-    expect(markdownResponse.headers.get('vary')).toBe('accept, ACCEPT-Encoding');
-    expect(markdownResponse.headers.get('cache-control')).toBe('no-store');
-    expect(await markdownResponse.text()).toContain('# Markdown');
+    expect(markdownResponse.headers.get('vary')).toBe('Accept');
+    expect(markdownResponse.headers.get('cloudflare-cdn-cache-control')).toBe('no-store');
+    expect(await markdownResponse.text()).toContain('# Aliveville');
   });
 
   it('preserves wildcard Vary without appending redundant selectors', async () => {
@@ -433,5 +374,20 @@ describe('AliveVille landing Pages middleware', () => {
     expect(await response.json()).toMatchObject({ error: { code: 'not_found' } });
     expect(assetFetch).not.toHaveBeenCalled();
     expect(next).not.toHaveBeenCalled();
+  });
+});
+
+describe('public source registry boundary', () => {
+  it('rejects an unregistered page even when a matching Markdown asset exists', async () => {
+    const { context, assetFetch } = makeContext({
+      path: '/unregistered',
+      accept: 'text/markdown',
+      asset: () =>
+        new Response('# Unexpected public data', { headers: { 'content-type': 'text/markdown' } }),
+    });
+    const response = await onRequest(context);
+    expect(response.status).toBe(404);
+    expect(assetFetch).not.toHaveBeenCalled();
+    expect(await response.text()).not.toContain('Unexpected public data');
   });
 });
