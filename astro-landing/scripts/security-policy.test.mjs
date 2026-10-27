@@ -16,8 +16,8 @@ const reviewed = () => ({
   metadata: { vulnerabilities: { info: 0, low: 0, moderate: 0, high: 1, critical: 0 } },
 });
 
-test('retains the sole reviewed finding and accepts an actually clean report', () => {
-  assert.equal(validateAudit(reviewed(), 1), 1);
+test('rejects the retired exception and accepts an actually clean report', () => {
+  assert.throws(() => validateAudit(reviewed(), 1));
   const clean = reviewed();
   clean.advisories = {};
   clean.metadata.vulnerabilities.high = 0;
@@ -46,7 +46,7 @@ test('registry errors, missing findings, and inconsistent counts cannot look cle
 test('published patch forces remediation rather than permanent tolerance', () => {
   const audit = reviewed();
   audit.advisories.known.patched_versions = '>=4.3.1';
-  assert.throws(() => validateAudit(audit, 1), /patch is now available/);
+  assert.throws(() => validateAudit(audit, 1), /advisories require remediation/);
 });
 test('muted findings and unexplained exit failures fail closed', () => {
   const audit = reviewed();

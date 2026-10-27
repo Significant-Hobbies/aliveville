@@ -7,3 +7,9 @@ onlyBuiltDependencies:
 # GHSA-68fv-2mgg-jv7q: Tailwind's compatible range retains 1.2.1 on import.
 overrides:
   source-map-js: 1.2.2
+  http-cache-semantics: 4.3.0
+  zod@>=4.0.0 <4.6.6: 4.6.6
+  undici@>=8.0.0 <8.12.2: 8.12.2
+
+patchedDependencies:
+  http-cache-semantics@4.3.0: patches/http-cache-semantics@4.3.0.patch
