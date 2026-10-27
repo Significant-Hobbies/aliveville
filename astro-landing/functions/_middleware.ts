@@ -463,7 +463,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   }
 
   // Only source-registered pages may negotiate a public mirror.
-  if ((request.method === 'GET' || request.method === 'HEAD') && !pathname.includes('.') && wantsMarkdown(request)) {
+  if ((request.method === 'GET' || request.method === 'HEAD') && !pathname.startsWith('/api/') && !pathname.includes('.') && wantsMarkdown(request)) {
     return markdown404(pathname, SITE_ORIGIN, request.method);
   }
 

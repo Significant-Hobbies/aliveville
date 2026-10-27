@@ -36,6 +36,13 @@ for (const product of ['aliveville']) {
         await new Promise((resolve) => setTimeout(resolve, 200));
       }
       assert.ok(ready, logs);
+      for (const method of ['GET', 'HEAD']) {
+        const response = await fetch(origin + '/api/ai', { method, headers: { accept: 'text/markdown, application/json' } });
+        assert.equal(response.status, 200);
+        assert.match(response.headers.get('content-type'), /application\/json/);
+        if (method === 'GET') assert.ok((await response.json()).surfaces.length > 0);
+        else assert.equal(await response.text(), '');
+      }
       const catalogResponse = await fetch(`${origin}/api/md/_catalog`);
       assert.equal(catalogResponse.status, 200);
       const catalog = await catalogResponse.json();

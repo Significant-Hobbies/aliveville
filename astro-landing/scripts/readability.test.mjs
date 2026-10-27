@@ -53,3 +53,11 @@ test('unknown Markdown paths cannot advertise off-origin canonicals', async () =
     assert.ok(response.headers.get('link').includes(fixtureOrigin + '/llms.txt'));
   }
 });
+
+test('simulator mirror preserves emphasis and ordered session steps', () => {
+  const text = renderMarkdown(documents.find((document) => document.path === '/ai-world-simulator'));
+  assert.match(text, /\*\*AI world simulator\*\*/);
+  assert.doesNotMatch(text, /\*\*[^*\n]+ \*\*/);
+  assert.match(text, /\n1\. /);
+  assert.match(text, /\n4\. /);
+});

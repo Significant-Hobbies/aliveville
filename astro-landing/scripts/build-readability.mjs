@@ -10,7 +10,7 @@ for (const document of documents) {
   if (!html.includes('name="ai-summary"') || !html.includes('type="text/markdown"')) throw new Error(`Missing head signals: ${name}`);
   await writeFile(new URL(`${name}.md`, output), renderMarkdown(document));
 }
-const htmlFiles = (await readdir(output)).filter((name) => name.endsWith('.html') && name !== '404.html');
+const htmlFiles = (await readdir(output, { recursive: true })).filter((name) => name.endsWith('.html') && name !== '404.html');
 if (htmlFiles.length !== documents.length) throw new Error('Public HTML/Markdown registry mismatch');
 for (const file of ['llms.txt', 'llms-full.txt', 'ai.txt']) {
   const response = await handleReadability(new Request(`${origin}/${file}`));
