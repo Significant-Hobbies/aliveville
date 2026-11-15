@@ -10,7 +10,7 @@ import PreciseFooter from '../components/PreciseFooter.astro';
     <title>{copy.title}</title>
     <meta
       name="description"
-      content="Play a real AI world simulator free in your browser. Aliveville runs autonomous NPCs with memory, relationships, and grudges in a persistent 3D town — no install."
+      content={copy.description}
     />
     <meta
       name="keywords"
@@ -23,15 +23,17 @@ import PreciseFooter from '../components/PreciseFooter.astro';
     />
     <link rel="canonical" href="https://aliveville.com/ai-world-simulator" />
     <meta property="og:url" content="https://aliveville.com/ai-world-simulator" />
-    <meta property="og:title" content="AI World Simulator in the Browser — Aliveville" />
+    <meta property="og:title" content={copy.title} />
     <meta
       property="og:description"
-      content="What an AI world simulator is, how Aliveville runs autonomous NPCs with memory in a 3D town, and and the current status: a paused experiment with the hosted game offline."
+      content={copy.description}
     />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Aliveville" />
     <meta property="og:image" content="https://aliveville.com/assets/ashment_intro_square.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={copy.title} />
+    <meta name="twitter:description" content={copy.description} />
     <meta name="twitter:image" content="https://aliveville.com/assets/ashment_intro_square.jpg" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
