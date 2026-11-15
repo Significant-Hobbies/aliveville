@@ -10,7 +10,7 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const manifest = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
 assert.equal(
   manifest.dependencies.astro,
-  '7.3.6',
+  '7.4.7',
   'Re-check the pinned cache patch and static Pages boundary when changing Astro'
 );
 assert.equal(config.output, 'static', 'The reviewed Pages boundary requires a static landing');
