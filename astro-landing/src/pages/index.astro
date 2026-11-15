@@ -118,6 +118,20 @@ import '../styles/global.css';
         .col-span-2 { grid-column: span 2; }
         .row-span-2 { grid-row: span 2; }
 
+        @media (max-width: 767px) {
+            .bento-grid {
+                grid-template-columns: minmax(0, 1fr);
+                grid-auto-rows: auto;
+            }
+            .bento-grid > .bento-item {
+                grid-column: 1 / -1;
+                grid-row: auto;
+                min-height: 18rem;
+                padding: 1.5rem;
+            }
+            .bento-decoration { display: none; }
+        }
+
         .btn-pro {
             position: relative;
             padding: 14px 32px;
@@ -664,7 +678,7 @@ import '../styles/global.css';
                         {copy.text.move_with_wasd_through_a_3d}
                     </p>
                 </div>
-                <div class="relative z-10 w-48 h-48 bg-white/5 rounded-2xl border border-white/5 rotate-12 translate-x-12 group-hover:scale-110 transition-transform"></div>
+                <div class="bento-decoration relative z-10 w-48 h-48 bg-white/5 rounded-2xl border border-white/5 rotate-12 translate-x-12 group-hover:scale-110 transition-transform"></div>
             </div>
         </div>
     </section>
