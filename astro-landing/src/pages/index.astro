@@ -10,20 +10,20 @@ import '../styles/global.css';
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{copy.title}</title>
-    <meta name="description" content="Play an AI civilization simulation in the browser: a 3D town of autonomous agents that live, remember, and react. No install. Free to try." />
+    <meta name="description" content={copy.description} />
     <meta name="keywords" content="AI world simulator, browser AI game, autonomous NPCs, 3D AI town, playable AI simulation, persistent AI agents" />
     <meta name="author" content="Sarthak Agrawal" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <link rel="canonical" href="https://aliveville.com/" />
     <meta property="og:url" content="https://aliveville.com/" />
-    <meta property="og:title" content="Aliveville — AI civilization simulation game in the browser" />
-    <meta property="og:description" content="AI world / civilization simulation in the browser — autonomous NPCs with memory. No install." />
+    <meta property="og:title" content={copy.title} />
+    <meta property="og:description" content={copy.description} />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://aliveville.com/assets/ashment_intro_square.jpg" />
     <meta property="og:site_name" content="Aliveville" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Aliveville — AI civilization simulation game in the browser" />
-    <meta name="twitter:description" content="Walk a 3D town where 5 AI agents live their own day — remembering people, holding grudges, and gossiping while you explore." />
+    <meta name="twitter:title" content={copy.title} />
+    <meta name="twitter:description" content={copy.description} />
     <meta name="twitter:image" content="https://aliveville.com/assets/ashment_intro_square.jpg" />
     <style>
         :root {
@@ -414,7 +414,7 @@ import '../styles/global.css';
       "@type": "WebSite",
       "name": "Aliveville",
       "url": "https://aliveville.com/",
-      "description": "A browser-playable AI world simulator. Walk a 3D town where autonomous agents live, remember, and react in real time.",
+      "description": copy.description,
       "inLanguage": "en",
       "publisher": {
         "@type": "Organization",
@@ -441,7 +441,7 @@ import '../styles/global.css';
           "name": "What is Aliveville?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Aliveville is a browser-playable AI world simulator where five autonomous AI agents live their own daily lives in a 3D town. They remember people, hold grudges, and gossip while you explore. No install is required — it runs directly in modern web browsers."
+            "text": copy.text.aliveville_is_a_browser_playable_ai
           }
         },
         {
@@ -449,7 +449,7 @@ import '../styles/global.css';
           "name": "Is Aliveville free to play?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes, Aliveville is free to play. It runs in your browser with no install required. You can walk the 3D town using WASD controls and interact with autonomous AI villagers immediately, with no download, account, or payment needed to start exploring."
+            "text": copy.text.yes_aliveville_is_free_to_play
           }
         },
         {
@@ -457,7 +457,7 @@ import '../styles/global.css';
           "name": "Do the AI agents in Aliveville have memory?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes, NPCs use location-aware memory retrieval. They only recall what is relevant to their current context, state, and social bonds. Autonomous loops continue even when you are away, so agents keep living, remembering, and evolving their relationships over time."
+            "text": copy.text.yes_npcs_use_location_aware_memory
           }
         },
         {
@@ -481,7 +481,7 @@ import '../styles/global.css';
           "name": "What can I do in Aliveville?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Pick a hero, walk the 3D town with WASD controls, and observe autonomous villagers going about their daily lives. You can watch social dynamics like grudges and gossip unfold in real time, and click to talk with the AI agents as you explore."
+            "text": copy.text.pick_a_hero_walk_the_3d
           }
         },
         {
@@ -489,7 +489,7 @@ import '../styles/global.css';
           "name": "Is Aliveville an AI experiment?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes, Aliveville is a persistent ecosystem exploring autonomous agent behavior, narrative emergence, and playable 3D exploration. It is an interactive AI world experiment where five agents live, remember, and react on their own, building emergent stories you can witness firsthand."
+            "text": copy.text.yes_aliveville_is_a_persistent_ecosystem
           }
         }
       ]
@@ -499,40 +499,15 @@ import '../styles/global.css';
       "@type": "VideoGame",
       "name": "Aliveville",
       "url": "https://aliveville.com/",
-      "description": "A browser-playable AI world simulator where 5 autonomous agents live their own day in a 3D town — remembering people, holding grudges, and gossiping.",
+      "description": copy.description,
       "genre": ["Simulation", "AI", "Sandbox"],
       "gamePlatform": "Web Browser",
       "applicationCategory": "Game",
       "operatingSystem": "Any (Web Browser)",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD",
-        "description": "Free and open source. The hosted game is offline (paused experiment)."
-      },
       "publisher": {
         "@type": "Organization",
         "name": "Aliveville",
         "url": "https://aliveville.com/"
-      }
-    })} />
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "Aliveville",
-      "applicationCategory": "GameApplication",
-      "operatingSystem": "Web Browser",
-      "url": "https://aliveville.com",
-      "description": "A browser-playable AI world simulator where 5 AI agents live their own day — remembering people, holding grudges, and gossiping while you explore a 3D town.",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "creator": {
-        "@type": "Person",
-        "name": "Sarthak Agrawal",
-        "url": "https://sarthakagrawal.dev"
       }
     })} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -843,6 +818,9 @@ import '../styles/global.css';
         </div>
     </section>
 
+    <p class="relative z-30 px-6 py-8 text-center text-sm text-white/60">
+        <a href={copy.links.simulator_guide} class="underline underline-offset-4 hover:text-[#f8d44e]">{copy.text.simulator_guide}</a>
+    </p>
     <PreciseFooter />
 
     <script>
